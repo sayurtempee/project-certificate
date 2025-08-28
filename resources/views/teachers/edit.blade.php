@@ -56,16 +56,7 @@
                     <div class="flex items-center space-x-3 mt-2">
                         <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Foto"
                             class="w-24 h-24 rounded border object-cover">
-
-                        {{-- Tombol hapus foto --}}
-                        <form action="{{ route('teacher.deletePhoto', $teacher->id) }}" method="POST"
-                            onsubmit="return confirm('Yakin ingin hapus foto profil?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                                Hapus Foto
-                            </button>
-                        </form>
+                        {{-- Tombol hapus foto pindahkan ke luar form --}}
                     </div>
                 @else
                     <div class="flex justify-center mt-2">
@@ -74,21 +65,31 @@
                 @endif
             </div>
 
-            <div class="flex justify-between items-center mt-6">
-                <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
-                    Simpan Perubahan
-                </button>
+            <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
+                Simpan Perubahan
+            </button>
+        </form>
 
-                {{-- Tombol hapus profile --}}
-                <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
-                    onsubmit="return confirm('Yakin ingin menghapus profile ini? Data tidak bisa dikembalikan!')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700">
-                        Hapus Profile
-                    </button>
-                </form>
-            </div>
+        {{-- Form hapus foto (terpisah) --}}
+        @if ($teacher->photo)
+            <form action="{{ route('teacher.deletePhoto', $teacher->id) }}" method="POST"
+                onsubmit="return confirm('Yakin ingin hapus foto profil?')" class="mt-3">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                    Hapus Foto
+                </button>
+            </form>
+        @endif
+
+        {{-- Form hapus profile (terpisah) --}}
+        <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
+            onsubmit="return confirm('Yakin ingin menghapus profile ini? Data tidak bisa dikembalikan!')" class="mt-3">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700">
+                Hapus Profile
+            </button>
         </form>
     </div>
 @endsection

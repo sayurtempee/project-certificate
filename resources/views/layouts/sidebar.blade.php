@@ -1,6 +1,7 @@
 <div class="w-64 bg-blue-900 text-white flex flex-col min-h-screen">
     <div class="p-4 text-lg font-bold">
-        SDIA.13 <span class="text-yellow-400">.Rawamangun</span>
+        {{--  SDIA.13 <span class="text-yellow-400">.Rawamangun</span>  --}}
+        <img src="{{ asset('img/logo_white.png') }}" alt="">
     </div>
 
     <nav class="flex-1 px-4 space-y-2">
