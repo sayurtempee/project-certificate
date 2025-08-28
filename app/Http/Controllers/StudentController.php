@@ -600,6 +600,12 @@ class StudentController extends Controller
     {
         $student = Student::findOrFail($id);
 
+        $request->validate([
+            'kelancaran' => 'required|integer|min:0|max:33',
+            'fasohah' => 'required|integer|min:0|max:33',
+            'tajwid' => 'required|integer|min:0|max:33',
+        ]);
+
         $student->kelancaran = $request->kelancaran;
         $student->fasohah = $request->fasohah;
         $student->tajwid = $request->tajwid;

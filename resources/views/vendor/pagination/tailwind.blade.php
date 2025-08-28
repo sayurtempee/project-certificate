@@ -23,11 +23,13 @@
             @if (is_array($element))
                 @foreach ($element as $page => $url)
                     @if ($page == $paginator->currentPage())
+                        {{-- Halaman Aktif --}}
                         <span
-                            class="px-4 py-2 text-sm font-bold text-white rounded-lg bg-gradient-to-r from-blue-600 to-blue-500">
+                            class="px-4 py-2 text-sm font-bold text-white rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
                             {{ $page }}
                         </span>
                     @else
+                        {{-- Halaman Biasa --}}
                         <a href="{{ $url }}"
                             class="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:opacity-90">
                             {{ $page }}

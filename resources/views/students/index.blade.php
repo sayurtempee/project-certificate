@@ -34,15 +34,17 @@
         </form>
 
         <!-- Upload form -->
-        <form action="{{ route('student.import') }}" method="POST" enctype="multipart/form-data" class="inline-block">
-            @csrf
-            <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
-            <label for="csvFileInput"
-                class="bg-green-500 px-4 py-2 rounded-xl text-white font-semibold shadow hover:bg-green-600 transition cursor-pointer">
-                Upload CSV
-            </label>
-            <button type="submit" class="hidden" id="csvSubmitBtn"></button>
-        </form>
+        @if (Auth::user()->role == 'teacher')
+            <form action="{{ route('student.import') }}" method="POST" enctype="multipart/form-data" class="inline-block">
+                @csrf
+                <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
+                <label for="csvFileInput"
+                    class="bg-green-500 px-4 py-2 rounded-xl text-white font-semibold shadow hover:bg-green-600 transition cursor-pointer">
+                    Upload CSV
+                </label>
+                <button type="submit" class="hidden" id="csvSubmitBtn"></button>
+            </form>
+        @endif
     </div>
 
     <!-- Table -->
@@ -90,11 +92,11 @@
                                 @csrf
                                 @method('PUT')
                                 <td class="py-3 px-4"><input type="number" name="kelancaran"
-                                        value="{{ $student->kelancaran }}"
+                                        value="{{ $student->kelancaran }}" min="0" max="33"
                                         class="w-16 border rounded px-1 text-sm text-center"></td>
-                                <td class="py-3 px-4"><input type="number" name="fasohah" value="{{ $student->fasohah }}"
+                                <td class="py-3 px-4"><input type="number" name="fasohah" value="{{ $student->fasohah }}" min="0" max="33"
                                         class="w-16 border rounded px-1 text-sm text-center"></td>
-                                <td class="py-3 px-4"><input type="number" name="tajwid" value="{{ $student->tajwid }}"
+                                <td class="py-3 px-4"><input type="number" name="tajwid" value="{{ $student->tajwid }}" min="0" max="33"
                                         class="w-16 border rounded px-1 text-sm text-center"></td>
                                 <td class="py-3 px-4">{{ $student->total_kesalahan }}</td>
                                 <td class="py-3 px-4">{{ $student->nilai }}</td>

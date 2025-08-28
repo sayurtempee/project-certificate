@@ -37,7 +37,7 @@
             </button>
 
             {{-- Tombol Forgot Password --}}
-            <a href="#" class="block text-center mt-3 text-sm text-blue-600 hover:underline">
+            <a href="{{ route('password.request') }}" class="block text-center mt-3 text-sm text-blue-600 hover:underline">
                 Forgot Password?
             </a>
         </form>
