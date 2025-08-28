@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Daftar Siswa')
+@include('layouts.partials.swal')
 
 @section('dashboard-content')
     <!-- Header -->
@@ -29,7 +30,7 @@
             </select>
             <button type="submit"
                 class="bg-blue-600 px-4 py-2 rounded-xl text-white hover:bg-blue-700 transition font-semibold">
-                🔍 Cari
+                <i class="bi bi-search-heart"></i>
             </button>
         </form>
 

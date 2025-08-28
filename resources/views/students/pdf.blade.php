@@ -8,56 +8,89 @@
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 12px;
+            color: #333;
+            margin: 40px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 20px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         th,
         td {
-            border: 1px solid #000;
-            padding: 6px 10px;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
-            background: #f2f2f2;
+            background: #f8f9fa;
+            color: #444;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        td {
+            background: #fff;
         }
 
         .nilai {
             font-weight: bold;
+            font-size: 13px;
         }
 
         .green {
-            color: green;
+            color: #16a34a;
         }
 
         .blue {
-            color: blue;
+            color: #2563eb;
         }
 
         .indigo {
-            color: indigo;
+            color: #4f46e5;
         }
 
         .yellow {
-            color: goldenrod;
+            color: #b45309;
         }
 
         .orange {
-            color: darkorange;
+            color: #ea580c;
         }
 
         .red {
-            color: red;
+            color: #dc2626;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            text-align: center;
+            color: gray;
+        }
+
+        /* Tambahan: table zebra effect */
+        tr:nth-child(even) td {
+            background: #fdfdfd;
+        }
+
+        tr:hover td {
+            background: #f1f5f9;
         }
     </style>
 </head>
@@ -78,6 +111,31 @@
             <th>Juz</th>
             <td>Juz {{ $student->juz }}</td>
         </tr>
+        @if (isset($juzData[$student->juz]))
+            <tr>
+                <th>Daftar Surat</th>
+                <td>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 5px; font-size: 11px;">
+                        <thead>
+                            <tr style="background:#f2f2f2;">
+                                <th style="border:1px solid #ccc; padding:5px;">Surat ke-</th>
+                                <th style="border:1px solid #ccc; padding:5px;">Nama Surat</th>
+                                <th style="border:1px solid #ccc; padding:5px;">Jumlah Ayat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($juzData[$student->juz] as $surat)
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['surat-ke'] }}</td>
+                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['nama'] }}</td>
+                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['ayat'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        @endif
         <tr>
             <th>Penyimak</th>
             <td>{{ $student->penyimak }}</td>
@@ -117,9 +175,9 @@
         </tr>
     </table>
 
-    <p style="margin-top: 20px; font-size: 11px; text-align: center; color: gray;">
+    <div class="footer">
         Dicetak pada {{ now()->format('d-m-Y H:i') }}
-    </p>
+    </div>
 </body>
 
 </html>

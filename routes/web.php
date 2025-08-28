@@ -27,6 +27,8 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('teacher', TeacherController::class);
+    Route::delete('/teacher/photo/{id}', [TeacherController::class, 'deletePhoto'])
+        ->name('teacher.deletePhoto');
     Route::resource('student', StudentController::class);
     Route::put('student/update-inline/{id}', [StudentController::class, 'updateInline'])->name('student.updateInline');
     Route::post('/students/import', [StudentController::class, 'import'])->name('student.import');

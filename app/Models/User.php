@@ -54,4 +54,18 @@ class User extends Authenticatable
     protected $casts = [
         'last_seen' => 'datetime',
     ];
+
+    public function get_gravatar_url()
+    {
+        // Trim leading and trailing whitespace from
+        // an email address and force all characters
+        // to lower case
+        $address = strtolower(trim($this->email));
+
+        // Create an SHA256 hash of the final string
+        $hash = hash('sha256', $address);
+
+        // Grab the actual image URL
+        return 'https://gravatar.com/avatar/' . $hash;
+    }
 }

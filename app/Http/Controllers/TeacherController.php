@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 
 class TeacherController extends Controller
 {
@@ -122,6 +123,25 @@ class TeacherController extends Controller
         $teacher->delete();
 
         return $this->redirectToRole('Guru berhasil dihapus', 'deleted');
+    }
+
+    public function deletePhoto($id)
+    {
+        $teacher = User::findOrFail($id);
+
+        // cek apakah teacher benar
+        if ($teacher->role !== 'teacher') {
+            return redirect()->back()->with('error', 'Akses ditolak.');
+        }
+
+        if ($teacher->photo && file_exists(public_path('storage/' . $teacher->photo))) {
+            unlink(public_path('storage/' . $teacher->photo));
+        }
+
+        $teacher->photo = null;
+        $teacher->save();
+
+        return redirect()->back()->with('success', 'Foto berhasil dihapus.');
     }
 
     /**

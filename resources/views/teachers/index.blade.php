@@ -12,18 +12,7 @@
             </button>
         </div>
 
-        {{--  Start Message  --}}
-        @if (session('success'))
-            <div class="bg-green-100 text-green-700 p-2 mb-3 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('deleted'))
-            <div class="bg-yellow-100 text-yellow-700 p-2 mb-3 rounded">
-                {{ session('deleted') }}
-            </div>
-        @endif
+        @include('layouts.partials.swal')
 
         @if ($errors->any())
             <div class="bg-red-100 text-red-700 p-2 mb-3 rounded">
@@ -60,7 +49,10 @@
                                             class="w-10 h-10 rounded-full">
                                     </div>
                                 @else
-                                    <span class="text-gray-500">-</span>
+                                    <div class="flex justify-center">
+                                        <img src="{{ $teacher->get_gravatar_url() }}" alt="Foto"
+                                            class="w-10 h-10 rounded-full">
+                                    </div>
                                 @endif
                             </td>
                             <td class="p-3 border text-center">{{ $teacher->name }}</td>
@@ -69,7 +61,8 @@
                                 @if ($teacher->is_online)
                                     <span class="text-green-600 font-semibold">Online</span>
                                 @else
-                                    <span class="text-gray-500">Offline ({{ $teacher->last_seen->diffForHumans() }})</span>
+                                    <span class="text-gray-500">Offline
+                                        ({{ $teacher->last_seen ? $teacher->last_seen->diffForHumans() : 'Belum login' }})</span>
                                 @endif
                             </td>
                             <td class="p-3 border text-center">
@@ -187,6 +180,5 @@
                 </form>
             </div>
         </div>
-
     </div>
 @endsection

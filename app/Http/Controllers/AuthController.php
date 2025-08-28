@@ -34,9 +34,9 @@ class AuthController extends Controller
             : back()->withErrors(['email' => __($status)]);
     }
 
-    public function showResetForm($token)
+    public function showResetForm(Request $request, $token)
     {
-        return view('auth.reset-password', ['token' => $token]);
+        return view('auth.reset-password', ['token' => $token, 'email' => $request->email]);
     }
 
     public function resetPassword(Request $request)
@@ -87,7 +87,7 @@ class AuthController extends Controller
                 'last_login_token' => Str::random(60), // token unik
             ]);
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('success', 'Login berhasil!');
         }
 
         return back()->withErrors([

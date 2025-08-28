@@ -53,14 +53,42 @@
                 <label class="block font-medium mb-1" for="photo">Foto Profile</label>
                 <input type="file" name="photo" id="photo" class="w-full">
                 @if ($teacher->photo)
-                    <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Foto"
-                        class="w-24 h-24 mt-2 rounded border object-cover">
+                    <div class="flex items-center space-x-3 mt-2">
+                        <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Foto"
+                            class="w-24 h-24 rounded border object-cover">
+
+                        {{-- Tombol hapus foto --}}
+                        <form action="{{ route('teacher.deletePhoto', $teacher->id) }}" method="POST"
+                            onsubmit="return confirm('Yakin ingin hapus foto profil?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                Hapus Foto
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="flex justify-center mt-2">
+                        <img src="{{ $teacher->get_gravatar_url() }}" alt="Foto" class="w-16 h-16 rounded-full">
+                    </div>
                 @endif
             </div>
 
-            <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
-                Simpan Perubahan
-            </button>
+            <div class="flex justify-between items-center mt-6">
+                <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
+                    Simpan Perubahan
+                </button>
+
+                {{-- Tombol hapus profile --}}
+                <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
+                    onsubmit="return confirm('Yakin ingin menghapus profile ini? Data tidak bisa dikembalikan!')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700">
+                        Hapus Profile
+                    </button>
+                </form>
+            </div>
         </form>
     </div>
 @endsection
