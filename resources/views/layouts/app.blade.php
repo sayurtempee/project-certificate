@@ -15,7 +15,7 @@
     {{-- Alpine.js --}}
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-    <link rel="icon" href="{{ asset('img/logo.avif') }}" type="image/avif">
+    <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
 
     {{--  Bootstrapp icons  --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
