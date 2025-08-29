@@ -33,4 +33,5 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::put('student/update-inline/{id}', [StudentController::class, 'updateInline'])->name('student.updateInline');
     Route::post('/students/import', [StudentController::class, 'import'])->name('student.import');
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');
+    Route::get('/students/juz/{juz?}', [StudentController::class, 'getJuzData']);
 });

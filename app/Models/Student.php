@@ -11,15 +11,15 @@ class Student extends Model
         'no_induk',
         'penyimak',
         'juz',
-        'kelancaran',
-        'fasohah',
-        'tajwid',
-        'total_kesalahan',
-        'nilai',
-        'predikat',
     ];
 
     protected $casts = [
         'juz' => 'integer',
     ];
+
+    // Relasi ke nilai per surat
+    public function surats()
+    {
+        return $this->hasMany(StudentSurat::class);
+    }
 }
