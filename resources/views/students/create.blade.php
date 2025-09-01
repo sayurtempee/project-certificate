@@ -64,44 +64,44 @@
             if (juzData[juz]) {
                 juzData[juz].forEach((surat, index) => {
                     tableBody.innerHTML += `
-                    <tr>
-                        <td class="border p-2">
-                            <input type="hidden" name="surat[${index}][surat_ke]" value="${surat['surat-ke']}">
-                            ${surat['surat-ke']}
-                        </td>
-                        <td class="border p-2">
-                            <input type="hidden" name="surat[${index}][nama]" value="${surat.nama}">
-                            ${surat.nama}
-                        </td>
-                        <td class="border p-2">
-                            <input type="hidden" name="surat[${index}][ayat]" value="${surat.ayat}">
-                            ${surat.ayat}
-                        </td>
-                        <td class="border p-2">
-                            <input type="number" name="surat[${index}][kelancaran]"
-                                    class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
-                        </td>
-                        <td class="border p-2">
-                            <input type="number" name="surat[${index}][fasohah]"
-                                    class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
-                        </td>
-                        <td class="border p-2">
-                            <input type="number" name="surat[${index}][tajwid]"
-                                    class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
-                        </td>
-                        <td class="border p-2">
-                            <input type="number" name="surat[${index}][total_kesalahan]"
-                                    class="w-20 border rounded p-1 bg-gray-100" readonly>
-                        </td>
-                        <td class="border p-2">
-                            <input type="number" name="surat[${index}][nilai]"
-                                    class="w-20 border rounded p-1 bg-gray-100" readonly>
-                        </td>
-                        <td class="border p-2">
-                            <input type="text" name="surat[${index}][predikat]"
-                                    class="w-20 border rounded p-1 bg-gray-100" readonly>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="border p-2">
+                        <input type="hidden" name="surat[${index}][surat_ke]" value="${surat.surat_ke}">
+                        ${surat.surat_ke}
+                    </td>
+                    <td class="border p-2">
+                        <input type="hidden" name="surat[${index}][nama_surat]" value="${surat.nama_surat}">
+                        ${surat.nama_surat}
+                    </td>
+                    <td class="border p-2">
+                        <input type="hidden" name="surat[${index}][ayat]" value="${surat.ayat}">
+                        ${surat.ayat}
+                    </td>
+                    <td class="border p-2">
+                        <input type="number" name="surat[${index}][kelancaran]"
+                               class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
+                    </td>
+                    <td class="border p-2">
+                        <input type="number" name="surat[${index}][fasohah]"
+                               class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
+                    </td>
+                    <td class="border p-2">
+                        <input type="number" name="surat[${index}][tajwid]"
+                               class="w-20 border rounded p-1" oninput="hitungNilai(${index})" min="0" max="33">
+                    </td>
+                    <td class="border p-2">
+                        <input type="number" name="surat[${index}][total_kesalahan]"
+                               class="w-20 border rounded p-1 bg-gray-100" readonly>
+                    </td>
+                    <td class="border p-2">
+                        <input type="number" name="surat[${index}][nilai]"
+                               class="w-20 border rounded p-1 bg-gray-100" readonly>
+                    </td>
+                    <td class="border p-2">
+                        <input type="text" name="surat[${index}][predikat]"
+                               class="w-20 border rounded p-1 bg-gray-100" readonly>
+                    </td>
+                </tr>
                 `;
                 });
             }

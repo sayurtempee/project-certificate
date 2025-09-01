@@ -9,48 +9,45 @@
             font-family: DejaVu Sans, sans-serif;
             font-size: 12px;
             color: #333;
-            margin: 40px;
+            margin: 30px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 20px;
+            margin-bottom: 20px;
+            font-size: 18px;
             color: #2c3e50;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
         }
 
         th,
         td {
             border: 1px solid #ccc;
-            padding: 8px 12px;
-            text-align: left;
-            vertical-align: middle;
+            padding: 6px 8px;
+            text-align: center;
         }
 
         th {
-            background: #f8f9fa;
-            color: #444;
+            background: #f2f2f2;
             font-weight: bold;
-            text-transform: uppercase;
             font-size: 11px;
         }
 
-        td {
-            background: #fff;
+        .footer {
+            margin-top: 20px;
+            font-size: 10px;
+            text-align: center;
+            color: gray;
         }
 
         .nilai {
             font-weight: bold;
-            font-size: 13px;
         }
 
         .green {
@@ -76,31 +73,15 @@
         .red {
             color: #dc2626;
         }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 10px;
-            text-align: center;
-            color: gray;
-        }
-
-        /* Tambahan: table zebra effect */
-        tr:nth-child(even) td {
-            background: #fdfdfd;
-        }
-
-        tr:hover td {
-            background: #f1f5f9;
-        }
     </style>
 </head>
 
 <body>
     <h2>Data Penilaian Siswa</h2>
 
-    <table>
+    <table style="margin-bottom:15px;">
         <tr>
-            <th>Nama Siswa</th>
+            <th style="width:30%">Nama Siswa</th>
             <td>{{ $student->nama }}</td>
         </tr>
         <tr>
@@ -111,68 +92,50 @@
             <th>Juz</th>
             <td>Juz {{ $student->juz }}</td>
         </tr>
-        @if (isset($juzData[$student->juz]))
-            <tr>
-                <th>Daftar Surat</th>
-                <td>
-                    <table style="width:100%; border-collapse: collapse; margin-top: 5px; font-size: 11px;">
-                        <thead>
-                            <tr style="background:#f2f2f2;">
-                                <th style="border:1px solid #ccc; padding:5px;">Surat ke-</th>
-                                <th style="border:1px solid #ccc; padding:5px;">Nama Surat</th>
-                                <th style="border:1px solid #ccc; padding:5px;">Jumlah Ayat</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($juzData[$student->juz] as $surat)
-                                <tr>
-                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['surat-ke'] }}</td>
-                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['nama'] }}</td>
-                                    <td style="border:1px solid #ccc; padding:5px;">{{ $surat['ayat'] }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        @endif
         <tr>
             <th>Penyimak</th>
-            <td>{{ $student->penyimak }}</td>
+            <td>{{ $student->penyimak ?? ($student->penyimak = auth()->user()->name) }}</td>
         </tr>
-        <tr>
-            <th>Kelancaran</th>
-            <td>{{ $student->kelancaran }}</td>
-        </tr>
-        <tr>
-            <th>Fasohah</th>
-            <td>{{ $student->fasohah }}</td>
-        </tr>
-        <tr>
-            <th>Tajwid</th>
-            <td>{{ $student->tajwid }}</td>
-        </tr>
-        <tr>
-            <th>Total Kesalahan</th>
-            <td>{{ $student->total_kesalahan }}</td>
-        </tr>
-        <tr>
-            <th>Nilai</th>
-            <td class="nilai">{{ $student->nilai }}</td>
-        </tr>
-        <tr>
-            <th>Predikat</th>
-            <td
-                class="nilai
-                @if ($student->nilai >= 96) green
-                @elseif($student->nilai >= 90) blue
-                @elseif($student->nilai >= 86) indigo
-                @elseif($student->nilai >= 80) yellow
-                @elseif($student->nilai >= 74.5) orange
-                @else red @endif">
-                {{ $student->predikat }}
-            </td>
-        </tr>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Surat ke</th>
+                <th>Nama Surat</th>
+                <th>Ayat</th>
+                <th>Kelancaran</th>
+                <th>Fasohah</th>
+                <th>Tajwid</th>
+                <th>Total Kesalahan</th>
+                <th>Nilai</th>
+                <th>Predikat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($surats as $s)
+                <tr>
+                    <td>{{ $s->surat_ke }}</td>
+                    <td style="text-align:left">{{ $s->nama_surat }}</td>
+                    <td>{{ $s->ayat }}</td>
+                    <td>{{ $s->kelancaran }}</td>
+                    <td>{{ $s->fasohah }}</td>
+                    <td>{{ $s->tajwid }}</td>
+                    <td>{{ $s->total_kesalahan }}</td>
+                    <td class="nilai">{{ $s->nilai }}</td>
+                    <td
+                        class="nilai
+                        @if ($s->nilai >= 96) green
+                        @elseif($s->nilai >= 90) blue
+                        @elseif($s->nilai >= 86) indigo
+                        @elseif($s->nilai >= 80) yellow
+                        @elseif($s->nilai >= 74.5) orange
+                        @else red @endif">
+                        {{ $s->predikat }}
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 
     <div class="footer">
