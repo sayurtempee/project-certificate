@@ -34,18 +34,27 @@
             </div>
         </form>
 
-        {{-- Upload CSV hanya untuk teacher --}}
+        {{-- Upload CSV dan create murid satuan hanya untuk teacher --}}
         @if (Auth::user()->role == 'teacher')
-            <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data"
-                class="mb-6 flex items-center gap-3">
-                @csrf
-                <label for="csvFileInput"
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow cursor-pointer transition flex items-center gap-2">
-                    ⬆️ Upload CSV
-                </label>
-                <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
-                <button type="submit" class="hidden" id="csvSubmitBtn"></button>
-            </form>
+            <div class="mb-6 flex items-center gap-3">
+                <!-- Upload CSV -->
+                <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data"
+                    class="flex items-center gap-3">
+                    @csrf
+                    <label for="csvFileInput"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow cursor-pointer transition flex items-center gap-2">
+                        ⬆️ Upload CSV
+                    </label>
+                    <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
+                    <button type="submit" class="hidden" id="csvSubmitBtn"></button>
+                </form>
+
+                <!-- Tambah Siswa -->
+                <a href="{{ route('student.create') }}"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                    ➕ Tambah Siswa
+                </a>
+            </div>
         @endif
 
         {{-- Table siswa --}}

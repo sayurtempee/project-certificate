@@ -8,7 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\UpdateLastSeen;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
