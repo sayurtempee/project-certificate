@@ -181,8 +181,8 @@
             const totalKesalahan = kelancaran + fasohah + tajwid;
             row.querySelector(`input[name="surat[${index}][total_kesalahan]"]`).value = totalKesalahan;
 
-            const nilai = Math.max(0, 100 - totalKesalahan);
-            row.querySelector(`input[name="surat[${index}][nilai]"]`).value = nilai;
+            const nilai = Math.max(0, 100 - (totalKesalahan * 1.7));
+            row.querySelector(`input[name="surat[${index}][nilai]"]`).value = nilai.toFixed(2);
 
             let predikat = "D";
             if (nilai >= 96) predikat = "A+";

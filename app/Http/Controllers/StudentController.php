@@ -54,7 +54,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $juzData = config('juz');
+        $juzData = $this->getJuzDataInternal();
         return view('students.create', compact('juzData'));
     }
 
@@ -99,7 +99,8 @@ class StudentController extends Controller
             $tajwid     = (int)($row['tajwid'] ?? 0);
 
             $total  = $kelancaran + $fasohah + $tajwid;
-            $nilai  = max(0, 100 - $total);
+            $bobot = $this->getBobotByJuz($validated['juz']);
+            $nilai = max(0, 100 - ($total * $bobot));
             $predik = $this->getPredikat($nilai);
 
             $student->surats()->create([
@@ -124,7 +125,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        $juzData = config('juz');
+        $juzData = $this->getJuzDataInternal();
 
         // pastikan data untuk juz ada
         if (!isset($juzData[$student->juz])) {
@@ -199,7 +200,8 @@ class StudentController extends Controller
             $surat = $student->surats()->where('id', $suratData['id'])->firstOrFail();
 
             $total = $suratData['kelancaran'] + $suratData['fasohah'] + $suratData['tajwid'];
-            $nilai = max(0, 100 - $total);
+            $bobot = $this->getBobotByJuz($validated['juz']);
+            $nilai = max(0, 100 - ($total * $bobot));
             $predikat = $this->getPredikat($nilai);
 
             $surat->update([
@@ -224,6 +226,7 @@ class StudentController extends Controller
         $student->delete();
         return redirect()->route('student.index')->with('success', 'Siswa berhasil dihapus.');
     }
+
     public function import(Request $request)
     {
         $request->validate([
@@ -266,7 +269,7 @@ class StudentController extends Controller
             );
 
             // Ambil data surat berdasarkan Juz
-            $juzData = config('juz');
+            $juzData = $this->getJuzDataInternal();
 
             // Pastikan Juz ada
             if (isset($juzData[$juz])) {
@@ -291,12 +294,6 @@ class StudentController extends Controller
         return redirect()->back()->with('success', 'CSV berhasil diimport!');
     }
 
-
-    private function getJuzDataInternal()
-    {
-        return config('juz');
-    }
-
     public function updateInline(Request $request, $id)
     {
         $student = Student::findOrFail($id);
@@ -316,7 +313,8 @@ class StudentController extends Controller
 
             // Hitung otomatis
             $total = $suratData['kelancaran'] + $suratData['fasohah'] + $suratData['tajwid'];
-            $nilai = max(0, 100 - $total);
+            $bobot = $this->getBobotByJuz($student->juz);
+            $nilai = max(0, 100 - ($total * $bobot));
 
             if ($nilai >= 96) $predikat = 'A+';
             elseif ($nilai >= 90) $predikat = 'A';
@@ -341,7 +339,7 @@ class StudentController extends Controller
     public function generatePdf($id)
     {
         $student = Student::with('surats')->findOrFail($id);
-        $juzData = config('juz');
+        $juzData = $this->getJuzDataInternal();
 
         // Pastikan data juz tersedia
         if (!isset($juzData[$student->juz])) {
@@ -365,8 +363,32 @@ class StudentController extends Controller
             ];
         });
 
+        // Generate PDF
         $pdf = PDF::loadView('students.pdf', compact('student', 'surats'));
+
         return $pdf->download("nilai-{$student->nama}.pdf");
+    }
+
+    // ==========================
+    // Private Helper Functions
+    // ==========================
+
+    private function getJuzDataInternal()
+    {
+        return config('juz.surat');
+    }
+
+    private function getBobotByJuz(int $juz): float
+    {
+        if ($juz >= 1 && $juz <= 15) {
+            return 1.7;
+        }
+
+        if ($juz >= 16 && $juz <= 30) {
+            return 1.9;
+        }
+
+        return 1.7;
     }
 
     private function getPredikat($nilai)

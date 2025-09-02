@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Data Siswa - {{ $student->nama }}</title>
+    <title>Transkip Nilai TASMI - {{ $student->nama }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -77,7 +77,8 @@
 </head>
 
 <body>
-    <h2>Data Penilaian Siswa</h2>
+    <h2>TRANSKIP NILAI TASMI 1 KALI DUDUK </br> SDI AL - AZHAR 13 RAWAMANGUN {{ now()->subYear()->format('Y') }} /
+        {{ now()->format('Y') }}</h2>
 
     <table style="margin-bottom:15px;">
         <tr>
@@ -103,11 +104,11 @@
             <tr>
                 <th>Surat ke</th>
                 <th>Nama Surat</th>
-                <th>Ayat</th>
-                <th>Kelancaran</th>
-                <th>Fasohah</th>
-                <th>Tajwid</th>
-                <th>Total Kesalahan</th>
+                <th>Jumlah Ayat</th>
+                {{--  <th>Kelancaran</th>  --}}
+                {{--  <th>Fasohah</th>  --}}
+                {{--  <th>Tajwid</th>  --}}
+                {{--  <th>Total Kesalahan</th>  --}}
                 <th>Nilai</th>
                 <th>Predikat</th>
             </tr>
@@ -118,10 +119,10 @@
                     <td>{{ $s->surat_ke }}</td>
                     <td style="text-align:left">{{ $s->nama_surat }}</td>
                     <td>{{ $s->ayat }}</td>
-                    <td>{{ $s->kelancaran }}</td>
-                    <td>{{ $s->fasohah }}</td>
-                    <td>{{ $s->tajwid }}</td>
-                    <td>{{ $s->total_kesalahan }}</td>
+                    {{--  <td>{{ $s->kelancaran }}</td>  --}}
+                    {{--  <td>{{ $s->fasohah }}</td>  --}}
+                    {{--  <td>{{ $s->tajwid }}</td>  --}}
+                    {{--  <td>{{ $s->total_kesalahan }}</td>  --}}
                     <td class="nilai">{{ $s->nilai }}</td>
                     <td
                         class="nilai

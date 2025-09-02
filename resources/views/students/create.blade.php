@@ -114,15 +114,18 @@
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][kelancaran]"
-                                       class="w-20 border rounded p-1 text-center" oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border rounded p-1 text-center"
+                                       oninput="hitungNilai(${index})" min="0" max="33">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][fasohah]"
-                                       class="w-20 border rounded p-1 text-center" oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border rounded p-1 text-center"
+                                       oninput="hitungNilai(${index})" min="0" max="33">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][tajwid]"
-                                       class="w-20 border rounded p-1 text-center" oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border rounded p-1 text-center"
+                                       oninput="hitungNilai(${index})" min="0" max="33">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][total_kesalahan]"
@@ -151,9 +154,17 @@
             const totalKesalahan = kelancaran + fasohah + tajwid;
             row.querySelector(`[name="surat[${index}][total_kesalahan]"]`).value = totalKesalahan;
 
-            const nilai = Math.max(0, 100 - totalKesalahan);
-            row.querySelector(`[name="surat[${index}][nilai]"]`).value = nilai;
+            // Ambil juz yang dipilih
+            const juz = parseInt(document.getElementById('juzSelect').value);
 
+            // Tentukan bobot
+            let bobot = (juz >= 1 && juz <= 15) ? 1.7 : 1.9;
+
+            // Hitung nilai
+            const nilai = Math.max(0, 100 - (totalKesalahan * bobot));
+            row.querySelector(`[name="surat[${index}][nilai]"]`).value = nilai.toFixed(2);
+
+            // Tentukan predikat
             let predikat = "D";
             if (nilai >= 96) predikat = "A+";
             else if (nilai >= 90) predikat = "A";
