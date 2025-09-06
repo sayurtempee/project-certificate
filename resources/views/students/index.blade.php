@@ -1,5 +1,27 @@
 @extends('layouts.dashboard')
 
+<head>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+</head>
+
+<style>
+    @keyframes fade-in-down {
+        0% {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-down {
+        animation: fade-in-down 0.3s ease-out;
+    }
+</style>
+
 @section('dashboard-content')
     <div class="container mx-auto px-4 py-8">
         <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -9,11 +31,15 @@
         {{-- Form filter --}}
         <form method="GET" action="{{ route('student.index') }}"
             class="bg-white rounded-xl shadow-md p-4 mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4">
+
+            {{-- Search --}}
             <div class="flex-1">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     placeholder="🔍 Cari nama siswa...">
             </div>
+
+            {{-- Filter Juz --}}
             <div>
                 <select name="juz"
                     class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -26,6 +52,39 @@
                     @endfor
                 </select>
             </div>
+
+            {{-- Filter Tahun Ajaran --}}
+            <div>
+                <select name="tahun"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    onchange="this.form.submit()">
+                    <option value="">📅 Semua Tahun</option>
+                    @foreach ($tahunList as $t)
+                        <option value="{{ $t }}" {{ isset($tahun) && $tahun == $t ? 'selected' : '' }}>
+                            {{ $t }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Penyimak (khusus admin) --}}
+            @if (auth()->user()->role === 'admin')
+                <div>
+                    <select name="penyimak"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        onchange="this.form.submit()">
+                        <option value="">👨‍🏫 Semua Penyimak</option>
+                        @foreach ($penyimakList as $p)
+                            <option value="{{ $p }}"
+                                {{ isset($penyimak) && $penyimak == $p ? 'selected' : '' }}>
+                                {{ $p }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+
+            {{-- Tombol --}}
             <div>
                 <button type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition">
@@ -54,6 +113,46 @@
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
                     ➕ Tambah Siswa
                 </a>
+            </div>
+        @endif
+
+        @if (Auth::user()->role == 'admin')
+            <div x-data="{ open: false }" class="relative inline-block text-left mb-4">
+                <!-- Trigger -->
+                <button @click="open = !open" type="button"
+                    class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm
+                       px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 gap-2"
+                    id="menu-button" aria-expanded="true" aria-haspopup="true">
+                    <i class="bi bi-archive"></i> <!-- icon arsip -->
+                    Rekap Tahunan
+                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2"
+                    class="absolute right-0 mt-2 w-56 rounded-2xl shadow-xl bg-white ring-1 ring-black ring-opacity-5 origin-top-right"
+                    @click.away="open = false">
+
+                    <div class="py-2">
+                        @foreach ($tahunList as $i => $tahun)
+                            <a href="{{ route('students.rekap', $tahun) }}"
+                                class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 rounded-md
+                                  opacity-0 translate-y-2
+                                  animate-fade-in-down [animation-delay:{{ $i * 100 }}ms]"
+                                style="animation-fill-mode: forwards;">
+                                <i class="bi bi-file-earmark-pdf text-red-500"></i>
+                                Download Rekap {{ $tahun }}
+                                <i class="bi bi-download ml-auto text-gray-400"></i>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         @endif
 

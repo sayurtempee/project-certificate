@@ -19,10 +19,13 @@ class StudentController extends Controller
     {
         $query = Student::query();
 
-        $search = $request->input('search');
-        $juz = $request->input('juz');
+        // Ambil filter dari request
+        $search    = $request->input('search');
+        $juz       = $request->input('juz');
+        $penyimak  = $request->input('penyimak');
+        $tahun     = $request->input('tahun');
 
-        // Filter penyimak: jika bukan admin, tampilkan siswa milik guru atau yang belum punya penyimak
+        // Filter khusus: jika bukan admin, tampilkan siswa milik guru atau yang belum punya penyimak
         if (auth()->user()->role !== 'admin') {
             $query->where(function ($q) {
                 $q->where('penyimak', auth()->user()->name)
@@ -30,23 +33,53 @@ class StudentController extends Controller
             });
         }
 
-        // Pencarian berdasarkan nama
-        if (!empty($search)) {
+        // Filter pencarian nama
+        if ($search) {
             $query->where('nama', 'like', '%' . $search . '%');
         }
 
-        // Filter berdasarkan Juz
-        if (!empty($juz)) {
+        // Filter juz
+        if ($juz) {
             $query->where('juz', $juz);
         }
 
-        // Urutkan nama ascending
-        $query->orderBy('juz', 'asc')->orderBy('nama', 'asc');
+        // Filter tahun ajaran
+        if ($tahun) {
+            $query->where('tahun_ajaran', $tahun);
+        }
 
-        // Pagination 30 per halaman
-        $students = $query->paginate(30)->withQueryString();
+        // Filter penyimak (hanya untuk admin)
+        if ($penyimak && auth()->user()->role === 'admin') {
+            $query->where('penyimak', $penyimak);
+        }
 
-        return view('students.index', compact('students', 'juz', 'search'));
+        // Ambil daftar tahun ajaran unik
+        $tahunList = Student::select('tahun_ajaran')
+            ->distinct()
+            ->orderBy('tahun_ajaran', 'desc')
+            ->pluck('tahun_ajaran');
+
+        // Ambil daftar penyimak unik (buat filter admin)
+        $penyimakList = Student::whereNotNull('penyimak')
+            ->distinct()
+            ->orderBy('penyimak', 'asc')
+            ->pluck('penyimak');
+
+        // Urutkan dan paginasi
+        $students = $query->orderBy('juz', 'asc')
+            ->orderBy('nama', 'asc')
+            ->paginate(30)
+            ->withQueryString();
+
+        return view('students.index', compact(
+            'students',
+            'juz',
+            'search',
+            'tahun',
+            'tahunList',
+            'penyimak',
+            'penyimakList'
+        ));
     }
 
     /**
@@ -90,6 +123,7 @@ class StudentController extends Controller
             'no_induk' => $validated['no_induk'],
             'penyimak' => $validated['penyimak'],
             'juz' => $validated['juz'],
+            'tahun_ajaran' => now()->year,
         ]);
 
         // simpan nilai per surat lewat relasi
@@ -254,7 +288,7 @@ class StudentController extends Controller
 
             // Tentukan penyimak
             $penyimak = $oldStudent->penyimak ?? null;
-            if (auth()->user()->role === 'teacher') {
+            if (!$penyimak && auth()->user()->role === 'teacher') {
                 $penyimak = auth()->user()->name;
             }
 
@@ -265,6 +299,7 @@ class StudentController extends Controller
                     'nama'     => $nama,
                     'juz'      => $juz,
                     'penyimak' => $penyimak,
+                    'tahun_ajaran' => now()->year,
                 ]
             );
 
@@ -367,6 +402,24 @@ class StudentController extends Controller
         $pdf = PDF::loadView('students.pdf', compact('student', 'surats'));
 
         return $pdf->download("nilai-{$student->nama}.pdf");
+    }
+
+    public function rekapTahunanPdf($tahun)
+    {
+        $students = Student::with('surats')
+            ->where('tahun_ajaran', $tahun)
+            ->orderBy('juz')
+            ->orderBy('nama')
+            ->get();
+
+        if ($students->isEmpty()) {
+            return back()->with('error', "Tidak ada data untuk tahun $tahun");
+        }
+
+        $pdf = Pdf::loadView('students.rekap-pdf', compact('students', 'tahun'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download("rekap-siswa-{$tahun}.pdf");
     }
 
     // ==========================

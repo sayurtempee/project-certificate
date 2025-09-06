@@ -32,5 +32,6 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::resource('student', StudentController::class);
     Route::put('student/update-inline/{id}', [StudentController::class, 'updateInline'])->name('student.updateInline');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
-    Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');
+    Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
+    Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
 });
