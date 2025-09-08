@@ -18,6 +18,15 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Redirect /student/juz/5 ke /student?juz=5
+    RewriteRule ^student/juz/([0-9]+)$ student?juz=$1 [QSA,L]
+
+    # Redirect /student/tahun/2024 ke /student?tahun=2024
+    RewriteRule ^student/tahun/([0-9]+)$ student?tahun=$1 [QSA,L]
+
+    # Redirect /student/penyimak/([^/]+)$ ke /student?penyimak=xxx
+    RewriteRule ^student/penyimak/([^/]+)$ student?penyimak=$1 [QSA,L]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

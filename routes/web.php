@@ -31,6 +31,7 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
         ->name('teacher.deletePhoto');
     Route::resource('student', StudentController::class);
     Route::put('student/update-inline/{id}', [StudentController::class, 'updateInline'])->name('student.updateInline');
+    Route::get('/students/export-example', [StudentController::class, 'exportSampleCsv'])->name('students.exportSampleCsv');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');

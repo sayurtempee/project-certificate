@@ -53,22 +53,22 @@
                 </select>
             </div>
 
-            {{-- Filter Tahun Ajaran --}}
-            <div>
-                <select name="tahun"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    onchange="this.form.submit()">
-                    <option value="">📅 Semua Tahun</option>
-                    @foreach ($tahunList as $t)
-                        <option value="{{ $t }}" {{ isset($tahun) && $tahun == $t ? 'selected' : '' }}>
-                            {{ $t }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Filter Penyimak (khusus admin) --}}
             @if (auth()->user()->role === 'admin')
+                {{-- Filter Tahun Ajaran --}}
+                <div>
+                    <select name="tahun"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        onchange="this.form.submit()">
+                        <option value="">📅 Semua Tahun</option>
+                        @foreach ($tahunList as $t)
+                            <option value="{{ $t }}" {{ isset($tahun) && $tahun == $t ? 'selected' : '' }}>
+                                {{ $t }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Filter Penyimak (khusus admin) --}}
                 <div>
                     <select name="penyimak"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -107,6 +107,12 @@
                     <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
                     <button type="submit" class="hidden" id="csvSubmitBtn"></button>
                 </form>
+
+                <!-- Export Sample CSV -->
+                <a href="{{ route('students.exportSampleCsv') }}"
+                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                    📥 Download Sample CSV
+                </a>
 
                 <!-- Tambah Siswa -->
                 <a href="{{ route('student.create') }}"
@@ -194,8 +200,8 @@
                                             onsubmit="return confirm('Yakin hapus siswa ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-block bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm shadow transition">
+                                            <button type="submit" disabled
+                                                class="inline-block bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm shadow transition cursor-not-allowed opacity-60">
                                                 🗑️ Hapus Siswa
                                             </button>
                                         </form>
@@ -226,6 +232,13 @@
             if (this.files.length > 0) {
                 this.form.submit();
             }
+        });
+
+        document.querySelector('form[action="{{ route('student.index') }}"]').addEventListener('submit', function(e) {
+            // hapus field kosong sebelum submit
+            this.querySelectorAll('input, select').forEach(el => {
+                if (!el.value) el.removeAttribute('name');
+            });
         });
     </script>
 @endsection
