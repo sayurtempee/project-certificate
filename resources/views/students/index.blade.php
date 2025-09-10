@@ -23,26 +23,26 @@
 </style>
 
 @section('dashboard-content')
-    <div class="container mx-auto px-4 py-8">
-        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+    <div class="container mx-auto px-5 py-8">
+        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-1">
             📚 Daftar Murid Juz {{ $juz ?? 'Semua' }}
         </h3>
 
         {{-- Form filter --}}
         <form method="GET" action="{{ route('student.index') }}"
-            class="bg-white rounded-xl shadow-md p-4 mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4">
+            class="bg-white rounded-xl shadow-md p-4 mt-[-4px] mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4">
 
             {{-- Search --}}
             <div class="flex-1">
                 <input type="text" name="search" value="{{ request('search') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     placeholder="🔍 Cari nama murid...">
             </div>
 
             {{-- Filter Juz --}}
             <div>
                 <select name="juz"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     onchange="this.form.submit()">
                     <option value="">📖 Semua Juz</option>
                     @for ($i = 1; $i <= 30; $i++)
@@ -57,7 +57,7 @@
                 {{-- Filter Tahun Ajaran --}}
                 <div>
                     <select name="tahun"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         onchange="this.form.submit()">
                         <option value="">📅 Semua Tahun</option>
                         @foreach ($tahunList as $t)
@@ -71,7 +71,7 @@
                 {{-- Filter Penyimak (khusus admin) --}}
                 <div>
                     <select name="penyimak"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         onchange="this.form.submit()">
                         <option value="">👨‍🏫 Semua Penyimak</option>
                         @foreach ($penyimakList as $p)
@@ -87,7 +87,7 @@
             {{-- Tombol --}}
             <div>
                 <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition">
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition">
                     🔎 Search
                 </button>
             </div>
@@ -101,7 +101,7 @@
                     class="flex items-center gap-3">
                     @csrf
                     <label for="csvFileInput"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow cursor-pointer transition flex items-center gap-2">
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 text-sm rounded-lg shadow cursor-pointer transition flex items-center gap-2">
                         ⬆️ Upload Data Siswa (CSV)
                     </label>
                     <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
@@ -110,13 +110,13 @@
 
                 <!-- Export Sample CSV -->
                 <a href="{{ route('students.exportSampleCsv') }}"
-                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition flex items-center gap-2">
                     📥 Download Sample (CSV)
                 </a>
 
                 <!-- Tambah Siswa -->
                 <a href="{{ route('student.create') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition flex items-center gap-2">
                     ➕ Tambah Data Satuan Murid
                 </a>
             </div>
@@ -127,9 +127,9 @@
                 <!-- Trigger -->
                 <button @click="open = !open" type="button"
                     class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm
-                       px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 gap-2"
+                   px-4 py-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 gap-2"
                     id="menu-button" aria-expanded="true" aria-haspopup="true">
-                    <i class="bi bi-archive"></i> <!-- icon arsip -->
+                    <i class="bi bi-archive"></i>
                     Rekap Tahunan
                     <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -148,9 +148,9 @@
                     <div class="py-2">
                         @foreach ($tahunList as $i => $tahun)
                             <a href="{{ route('students.rekap', $tahun) }}"
-                                class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 rounded-md
-                                  opacity-0 translate-y-2
-                                  animate-fade-in-down [animation-delay:{{ $i * 100 }}ms]"
+                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 rounded-md
+                              opacity-0 translate-y-2
+                              animate-fade-in-down [animation-delay:{{ $i * 100 }}ms]"
                                 style="animation-fill-mode: forwards;">
                                 <i class="bi bi-file-earmark-pdf text-red-500"></i>
                                 Download Rekap {{ $tahun }}
