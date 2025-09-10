@@ -217,7 +217,7 @@
             </tr>
             <tr>
                 <td style="padding-top: 60px;">(............................)</td>
-                <td style="padding-top: 60px; u">({{ $student->penyimak ?? auth()->user()->name }})</td>
+                <td style="padding-top: 60px;">({{ $student->penyimak ?? auth()->user()->name }})</td>
             </tr>
         </table>
     </div>

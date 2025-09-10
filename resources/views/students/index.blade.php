@@ -88,7 +88,7 @@
             <div>
                 <button type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition">
-                    🔎 Filter
+                    🔎 Search
                 </button>
             </div>
         </form>
@@ -102,7 +102,7 @@
                     @csrf
                     <label for="csvFileInput"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow cursor-pointer transition flex items-center gap-2">
-                        ⬆️ Upload CSV
+                        ⬆️ Upload Data Siswa (CSV)
                     </label>
                     <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
                     <button type="submit" class="hidden" id="csvSubmitBtn"></button>
@@ -111,13 +111,13 @@
                 <!-- Export Sample CSV -->
                 <a href="{{ route('students.exportSampleCsv') }}"
                     class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
-                    📥 Download Sample CSV
+                    📥 Download Sample (CSV)
                 </a>
 
                 <!-- Tambah Siswa -->
                 <a href="{{ route('student.create') }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
-                    ➕ Tambah Murid
+                    ➕ Tambah Data Satuan Murid
                 </a>
             </div>
         @endif
