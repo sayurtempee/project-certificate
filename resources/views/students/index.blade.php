@@ -25,7 +25,7 @@
 @section('dashboard-content')
     <div class="container mx-auto px-4 py-8">
         <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-            📚 Daftar Siswa Juz {{ $juz ?? 'Semua' }}
+            📚 Daftar Murid Juz {{ $juz ?? 'Semua' }}
         </h3>
 
         {{-- Form filter --}}
@@ -36,7 +36,7 @@
             <div class="flex-1">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="🔍 Cari nama siswa...">
+                    placeholder="🔍 Cari nama murid...">
             </div>
 
             {{-- Filter Juz --}}
@@ -117,7 +117,7 @@
                 <!-- Tambah Siswa -->
                 <a href="{{ route('student.create') }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
-                    ➕ Tambah Siswa
+                    ➕ Tambah Murid
                 </a>
             </div>
         @endif
@@ -168,7 +168,7 @@
                 <table class="min-w-full table-auto text-sm text-left">
                     <thead class="bg-slate-800 text-white text-sm uppercase">
                         <tr>
-                            <th class="px-6 py-3">Nama Siswa</th>
+                            <th class="px-6 py-3">Nama Murid</th>
                             <th class="px-6 py-3">No Induk</th>
                             <th class="px-6 py-3">Juz</th>
                             <th class="px-6 py-3">Penyimak</th>
@@ -197,12 +197,12 @@
                                         </a>
                                     @elseif (Auth::user()->role == 'admin')
                                         <form action="{{ route('student.destroy', $s->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin hapus siswa ini?')" class="inline">
+                                            onsubmit="return confirm('Yakin hapus murid ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" disabled
                                                 class="inline-block bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm shadow transition cursor-not-allowed opacity-60">
-                                                🗑️ Hapus Siswa
+                                                🗑️ Hapus Murid
                                             </button>
                                         </form>
                                     @endif
@@ -211,7 +211,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                    🚫 Belum ada data siswa untuk Juz ini
+                                    🚫 Belum ada data murid untuk Juz ini
                                 </td>
                             </tr>
                         @endforelse

@@ -414,23 +414,22 @@ class StudentController extends Controller
             return back()->with('error', "Data untuk Juz {$student->juz} tidak ditemukan di config.");
         }
 
+        // Gabungkan data surat & nilai
         $surats = collect($juzData[$student->juz])->map(function ($s) use ($student) {
             $nilai = $student->surats->firstWhere('surat_ke', $s['surat_ke']);
 
             return (object) [
-                'surat_ke'        => (int)$s['surat_ke'],
+                'surat_ke'        => (int) $s['surat_ke'],
                 'nama_surat'      => $s['nama_surat'],
-                'ayat'            => (int)$s['ayat'],
-                'kelancaran'      => (int)($nilai->kelancaran ?? 0),
-                'fasohah'         => (int)($nilai->fasohah ?? 0),
-                'tajwid'          => (int)($nilai->tajwid ?? 0),
-                'total_kesalahan' => (int)($nilai->total_kesalahan ?? 0),
-                'nilai'           => (float)($nilai->nilai ?? 0),
-                'predikat'        => (string)($nilai->predikat ?? '-'),
+                'ayat'            => (string) $s['ayat'],
+                'nilai'           => $nilai->nilai ?? 0,
+                'predikat'        => (string) ($nilai->predikat ?? '-'),
             ];
         });
 
-        $pdf = Pdf::loadView('students.pdf', compact('student', 'surats'));
+        $pdf = Pdf::loadView('students.pdf-siswa', compact('student', 'surats'))
+            ->setPaper('a4', 'portrait');
+
         return $pdf->download("nilai-{$student->nama}.pdf");
     }
 
@@ -438,6 +437,7 @@ class StudentController extends Controller
     {
         $students = Student::with('surats')
             ->where('tahun_ajaran', (int)$tahun)
+            ->orderBy('penyimak')
             ->orderBy('juz')
             ->orderBy('nama')
             ->get();
@@ -446,7 +446,10 @@ class StudentController extends Controller
             return back()->with('error', "Tidak ada data untuk tahun $tahun");
         }
 
-        $pdf = Pdf::loadView('students.rekap-pdf', compact('students', 'tahun'))
+        // Kelompokkan berdasarkan penyimak
+        $groupedStudents = $students->groupBy('penyimak');
+
+        $pdf = Pdf::loadView('students.rekap-tahunan-pdf', compact('groupedStudents', 'tahun'))
             ->setPaper('a4', 'landscape');
 
         return $pdf->download("rekap-siswa-{$tahun}.pdf");
