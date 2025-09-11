@@ -59,12 +59,17 @@
                     <select name="tahun"
                         class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         onchange="this.form.submit()">
-                        <option value="">📅 Semua Tahun</option>
-                        @foreach ($tahunList as $t)
-                            <option value="{{ $t }}" {{ isset($tahun) && $tahun == $t ? 'selected' : '' }}>
-                                {{ $t }}
-                            </option>
-                        @endforeach
+
+                        @if ($tahunList->isNotEmpty())
+                            <option value="">📅 Semua Tahun</option>
+                            @foreach ($tahunList as $t)
+                                <option value="{{ $t }}" {{ isset($tahun) && $tahun == $t ? 'selected' : '' }}>
+                                    {{ $t }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option disabled selected>❌ Tidak ada rekapan</option>
+                        @endif
                     </select>
                 </div>
 
@@ -73,13 +78,18 @@
                     <select name="penyimak"
                         class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         onchange="this.form.submit()">
-                        <option value="">👨‍🏫 Semua Penyimak</option>
-                        @foreach ($penyimakList as $p)
-                            <option value="{{ $p }}"
-                                {{ isset($penyimak) && $penyimak == $p ? 'selected' : '' }}>
-                                {{ $p }}
-                            </option>
-                        @endforeach
+
+                        @if ($penyimakList->isNotEmpty())
+                            <option value="">👨‍🏫 Semua Penyimak</option>
+                            @foreach ($penyimakList as $p)
+                                <option value="{{ $p }}"
+                                    {{ isset($penyimak) && $penyimak == $p ? 'selected' : '' }}>
+                                    {{ $p }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option disabled selected>❌ Tidak ada penyimak</option>
+                        @endif
                     </select>
                 </div>
             @endif
@@ -127,7 +137,7 @@
                 <!-- Trigger -->
                 <button @click="open = !open" type="button"
                     class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm
-                   px-4 py-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 gap-2"
+               px-4 py-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 gap-2"
                     id="menu-button" aria-expanded="true" aria-haspopup="true">
                     <i class="bi bi-archive"></i>
                     Rekap Tahunan
@@ -146,7 +156,7 @@
                     @click.away="open = false">
 
                     <div class="py-2">
-                        @foreach ($tahunList as $i => $tahun)
+                        @forelse ($tahunList as $i => $tahun)
                             <a href="{{ route('students.rekap', $tahun) }}"
                                 class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 rounded-md
                               opacity-0 translate-y-2
@@ -156,7 +166,11 @@
                                 Download Rekap {{ $tahun }}
                                 <i class="bi bi-download ml-auto text-gray-400"></i>
                             </a>
-                        @endforeach
+                        @empty
+                            <div class="px-4 py-2 text-sm text-gray-500 text-center">
+                                Tidak ada rekapan tahunan
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
