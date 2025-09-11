@@ -111,7 +111,7 @@ class StudentController extends Controller
             'surat'                  => 'required|array|min:1',
             'surat.*.surat_ke'       => 'required|integer|min:1',
             'surat.*.nama_surat'     => 'required|string|max:100',
-            'surat.*.ayat'           => 'required|integer|min:1',
+            'surat.*.ayat'           => 'required|string|max:100',
             'surat.*.kelancaran'     => 'nullable|integer|min:0|max:33',
             'surat.*.fasohah'        => 'nullable|integer|min:0|max:33',
             'surat.*.tajwid'         => 'nullable|integer|min:0|max:33',
@@ -153,7 +153,7 @@ class StudentController extends Controller
                 $student->surats()->create([
                     'surat_ke'        => (int)$row['surat_ke'],
                     'nama_surat'      => $row['nama_surat'],
-                    'ayat'            => (int)$row['ayat'],
+                    'ayat'            => $row['ayat'],
                     'kelancaran'      => $kelancaran,
                     'fasohah'         => $fasohah,
                     'tajwid'          => $tajwid,
