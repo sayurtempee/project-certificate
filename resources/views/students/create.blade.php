@@ -11,7 +11,7 @@
             </h2>
             <a href="{{ route('student.index') }}"
                 class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
-                ⬅️ Kembali
+                <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>
 
@@ -77,11 +77,11 @@
                 <div class="flex justify-end gap-3 pt-4">
                     <a href="{{ route('student.index') }}"
                         class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow transition">
-                        Batal
+                        <i class="bi bi-x-circle-fill"></i> Batal
                     </a>
                     <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
-                        💾 Simpan
+                        <i class="bi bi-floppy-fill"></i> Simpan
                     </button>
                 </div>
             </form>

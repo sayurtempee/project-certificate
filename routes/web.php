@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\UpdateLastSeen;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Middleware\UpdateLastSeen;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -27,6 +28,9 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('teacher', TeacherController::class);
+    Route::get('/admin/profile/edit', [AdminController::class, 'editAdminProfile'])->name('admin.edit');
+    Route::put('/admin/profile/update', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/profile/photo', [AdminController::class, 'deletePhoto'])->name('admin.deletePhoto');
     Route::delete('/teacher/photo/{id}', [TeacherController::class, 'deletePhoto'])
         ->name('teacher.deletePhoto');
     Route::resource('student', StudentController::class);
@@ -35,4 +39,5 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
+    Route::get('/rekap/downloads/certificate', [StudentController::class, 'sertifikatDownloadImage'])->name('students.download.img');
 });

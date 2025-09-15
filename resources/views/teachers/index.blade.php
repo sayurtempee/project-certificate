@@ -8,7 +8,7 @@
             <h2 class="text-2xl font-bold text-blue-900">Kelola Guru</h2>
             <button @click="openCreate = true"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
-                + Tambah Guru
+                <i class="bi bi-plus-circle-dotted"></i> Tambah Guru
             </button>
         </div>
 
@@ -42,27 +42,37 @@
                     @foreach ($teachers as $teacher)
                         <tr class="hover:bg-blue-50">
                             <td class="p-3 border text-center">{{ $loop->iteration }}</td>
-                            <td class="p-3 border text-center">
-                                @if ($teacher->photo)
-                                    <div class="flex justify-center">
+                            <td class="p-3 border text-center align-middle">
+                                <div class="flex justify-center items-center h-full">
+                                    @if ($teacher->photo)
                                         <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Foto"
-                                            class="w-10 h-10 rounded-full">
-                                    </div>
-                                @else
-                                    <div class="flex justify-center">
-                                        <img src="{{ $teacher->get_gravatar_url() }}" alt="Foto"
-                                            class="w-10 h-10 rounded-full">
-                                    </div>
-                                @endif
+                                            class="w-10 h-10 rounded-full object-cover">
+                                    @else
+                                        <div
+                                            class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-700 text-white font-bold border-2 border-blue-700 uppercase text-sm leading-none">
+                                            {{ $teacher->getInitials() }}
+                                        </div>
+                                    @endif
+                                </div>
                             </td>
                             <td class="p-3 border text-center">{{ $teacher->name }}</td>
                             <td class="p-3 border text-center">{{ $teacher->email }}</td>
                             <td class="p-3 border text-center">
                                 @if ($teacher->is_online)
-                                    <span class="text-green-600 font-semibold">Online</span>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                                        <i class="bi bi-circle-fill text-green-500 mr-1"></i>
+                                        Online
+                                    </span>
                                 @else
-                                    <span class="text-gray-500">Offline
-                                        ({{ $teacher->last_seen ? $teacher->last_seen->diffForHumans() : 'Belum login' }})</span>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm font-medium">
+                                        <i class="bi bi-circle-fill text-red-400 mr-1"></i>
+                                        Offline
+                                        <span class="ml-1 text-xs text-red-500 italic">
+                                            ({{ $teacher->last_seen ? $teacher->last_seen->diffForHumans() : 'Belum login' }})
+                                        </span>
+                                    </span>
                                 @endif
                             </td>
                             <td class="p-3 border text-center">

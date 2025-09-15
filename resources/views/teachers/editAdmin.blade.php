@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Profile')
+@section('title', 'Edit Profile Admin')
 
 @section('content')
     <div class="min-h-screen flex items-center justify-center bg-gray-100 py-10">
         <div class="w-full max-w-2xl bg-white shadow-lg rounded-xl p-8">
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">✏️ Edit Profile</h1>
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">✏️ Edit Profile Admin</h1>
 
             {{-- Tombol Kembali --}}
             <div class="mb-5">
@@ -34,22 +34,37 @@
             @endif
 
             {{-- Form Update --}}
-            <form action="{{ route('teacher.update', $teacher->id) }}" method="POST" enctype="multipart/form-data"
-                class="space-y-5">
+            <form action="{{ route('admin.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
                 @method('PUT')
 
                 {{-- Nama --}}
                 <div>
                     <label for="name" class="block font-medium mb-1">Nama</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $teacher->name) }}"
-                        class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
+                    <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}" disabled
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
 
                 {{-- Email --}}
                 <div>
                     <label for="email" class="block font-medium mb-1">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email', $teacher->email) }}"
+                    <input type="email" name="email" id="email" value="{{ old('email', $admin->email) }}"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+
+                {{-- Password --}}
+                <div>
+                    <label for="password" class="block font-medium mb-1">Password Baru
+                        <span class="text-sm text-gray-500">(kosongkan jika tidak diubah)</span>
+                    </label>
+                    <input type="password" name="password" id="password"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+
+                {{-- Konfirmasi Password --}}
+                <div>
+                    <label for="password_confirmation" class="block font-medium mb-1">Konfirmasi Password</label>
+                    <input type="password" name="password_confirmation" id="password_confirmation"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
 
@@ -61,14 +76,14 @@
                     {{-- Hidden input untuk hasil crop --}}
                     <input type="hidden" name="cropped_image" id="cropped_image">
 
-                    @if ($teacher->photo)
+                    @if ($admin->photo)
                         <div class="flex justify-center space-x-4 mt-3">
-                            <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Foto"
+                            <img src="{{ asset('storage/' . $admin->photo) }}" alt="Foto Profile"
                                 class="w-20 h-20 rounded-full object-cover">
                         </div>
                     @else
                         <div class="flex justify-center mt-3">
-                            <img src="{{ $teacher->get_gravatar_url() }}" alt="Foto"
+                            <img src="{{ $admin->get_gravatar_url() }}" alt="Foto"
                                 class="w-20 h-20 rounded-full shadow">
                         </div>
                     @endif
@@ -78,7 +93,8 @@
                 <div x-data="{ open: false }" x-on:open-cropper.window="open = true">
                     <!-- Overlay -->
                     <div x-show="open"
-                        class="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50" x-cloak>
+                        class="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50"
+                        x-cloak>
 
                         <!-- Modal -->
                         <div class="bg-white p-5 rounded-lg shadow-lg max-w-lg w-full">
@@ -110,30 +126,17 @@
                 </button>
             </form>
 
-            {{-- Form hapus foto --}}
-            @if ($teacher->photo)
-                <form action="{{ route('teacher.deletePhoto', $teacher->id) }}" method="POST"
-                    onsubmit="return confirm('Yakin ingin hapus foto profil?')" class="mt-4">
+            {{-- Form Hapus Foto (pisah dari form update) --}}
+            @if ($admin->photo)
+                <form action="{{ route('admin.deletePhoto') }}" method="POST" class="mt-3 flex justify-end"
+                    onsubmit="return confirm('Yakin hapus foto profil?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
-                        class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                         🗑️ Hapus Foto
                     </button>
                 </form>
             @endif
-
-            {{-- Form hapus profile --}}
-            <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
-                onsubmit="return confirm('Yakin ingin menghapus profile ini? Data tidak bisa dikembalikan!')"
-                class="mt-3">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                    class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                    ❌ Hapus Profile
-                </button>
-            </form>
         </div>
     </div>
 @endsection

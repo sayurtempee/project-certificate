@@ -25,8 +25,11 @@
                                 <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="Profile"
                                     class="w-10 h-10 rounded-full border-2 border-blue-700 object-cover">
                             @else
-                                <img src="{{ Auth::user()->get_gravatar_url() }}" alt="Profile"
-                                    class="w-10 h-10 rounded-full border-2 border-blue-700 object-cover">
+                                {{-- Inisial jika tidak ada foto --}}
+                                <div
+                                    class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-700 text-white font-bold border-2 border-blue-700 uppercase">
+                                    {{ Auth()->user()->getInitials() }}
+                                </div>
                             @endif
                         </button>
 
@@ -36,7 +39,11 @@
                                 class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
 
                                 {{-- Kalau role teacher ada Edit Profile --}}
-                                @if (Auth::user()->role == 'teacher')
+                                @if (Auth::check() && Auth::user()->role == 'admin')
+                                    <a href="{{ route('admin.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">
+                                        Edit Admin Profile
+                                    </a>
+                                @elseif (Auth::check() && Auth::user()->role == 'teacher')
                                     <a href="{{ route('teacher.edit', Auth::user()->id) }}"
                                         class="block px-4 py-2 text-gray-700 hover:bg-blue-100">
                                         Edit Profile

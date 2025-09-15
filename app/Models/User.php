@@ -24,8 +24,8 @@ class User extends Authenticatable
         'photo',
         'role',
         'is_online',
-        'last_login_token',
         'last_seen',
+        'last_login_token',
     ];
 
     /**
@@ -67,5 +67,18 @@ class User extends Authenticatable
 
         // Grab the actual image URL
         return 'https://gravatar.com/avatar/' . $hash;
+    }
+
+    public function getInitials(): string
+    {
+        $words = explode(' ', $this->name);
+        $initials = '';
+
+        foreach ($words as $word) {
+            $initials .= strtoupper(mb_substr($word, 0, 1));
+            if (strlen($initials) === 2) break;
+        }
+
+        return $initials;
     }
 }

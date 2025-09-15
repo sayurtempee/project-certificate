@@ -98,6 +98,33 @@ class TeacherController extends Controller
             $teacher->photo = $request->file('photo')->store('photos', 'public');
         }
 
+        // ---- Crop foto dari Cropper.js (base64) ----
+        if ($request->filled('cropped_image')) {
+            $imageData = $request->cropped_image;
+            $image = preg_replace('#^data:image/\w+;base64,#i', '', $imageData);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'teacher_photos/' . uniqid() . '.png';
+
+            Storage::disk('public')->put($imageName, base64_decode($image));
+
+            // Hapus foto lama
+            if ($teacher->photo) {
+                Storage::disk('public')->delete($teacher->photo);
+            }
+
+            $teacher->photo = $imageName;
+        }
+        // ---- Upload foto biasa tanpa crop ----
+        elseif ($request->hasFile('photo')) {
+            if ($teacher->photo) {
+                Storage::disk('public')->delete($teacher->photo);
+            }
+
+            $photoPath = $request->file('photo')->store('teacher_photos', 'public');
+            $teacher->photo = $photoPath;
+        }
+
+
         $teacher->name = $validateData['name'];
         $teacher->email = $validateData['email'];
 
@@ -107,7 +134,8 @@ class TeacherController extends Controller
 
         $teacher->save();
 
-        return $this->redirectToRole('Guru berhasil diperbarui');
+        // return $this->redirectToRole('Guru berhasil diperbarui');
+        return redirect()->route('teacher.edit', $teacher->id)->with('success', 'Guru berhasil diperbarui');
     }
 
     /**
@@ -141,7 +169,7 @@ class TeacherController extends Controller
         $teacher->photo = null;
         $teacher->save();
 
-        return redirect()->back()->with('success', 'Foto berhasil dihapus.');
+        return redirect()->route('teacher.edit', $teacher->id)->with('success', 'Foto berhasil dihapus.');
     }
 
     /**

@@ -14,11 +14,15 @@
 
     {{-- Alpine.js --}}
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
 
-    {{--  Bootstrapp icons  --}}
+    {{-- Bootstrap icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    {{-- Styles tambahan dari child view --}}
+    @stack('styles')
 </head>
 
 <body class="antialiased bg-gray-100">
@@ -27,6 +31,9 @@
     <script>
         feather.replace();
     </script>
+
+    {{-- Scripts tambahan dari child view --}}
+    @stack('scripts')
 </body>
 
 </html>

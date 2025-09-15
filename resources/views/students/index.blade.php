@@ -25,7 +25,7 @@
 @section('dashboard-content')
     <div class="container mx-auto px-5 py-8">
         <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-1">
-            📚 Daftar Murid Juz {{ $juz ?? 'Semua' }}
+            <i class="bi bi-book"></i> Daftar Murid Juz {{ $juz ?? 'Semua' }}
         </h3>
 
         {{-- Form filter --}}
@@ -98,7 +98,7 @@
             <div>
                 <button type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition">
-                    🔎 Search
+                    <i class="bi bi-search"></i> Search
                 </button>
             </div>
         </form>
@@ -112,7 +112,7 @@
                     @csrf
                     <label for="csvFileInput"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 text-sm rounded-lg shadow cursor-pointer transition flex items-center gap-2">
-                        ⬆️ Upload Data Siswa (CSV)
+                        <i class="bi bi-upload"></i> Upload Data Siswa (CSV)
                     </label>
                     <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
                     <button type="submit" class="hidden" id="csvSubmitBtn"></button>
@@ -121,13 +121,13 @@
                 <!-- Export Sample CSV -->
                 <a href="{{ route('students.exportSampleCsv') }}"
                     class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition flex items-center gap-2">
-                    📥 Download Sample (CSV)
+                    <i class="bi bi-file-earmark-arrow-down"></i> Download Sample (CSV)
                 </a>
 
                 <!-- Tambah Siswa -->
                 <a href="{{ route('student.create') }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 text-sm rounded-lg shadow transition flex items-center gap-2">
-                    ➕ Tambah Data Satuan Murid
+                    <i class="bi bi-plus-circle-dotted"></i> Tambah Data Satuan Murid
                 </a>
             </div>
         @endif
@@ -202,7 +202,7 @@
                                     @if (Auth::user()->role == 'teacher')
                                         <a href="{{ route('student.show', $s->id) }}"
                                             class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm shadow transition">
-                                            📑 Detail Nilai
+                                            <i class="bi bi-ticket-detailed"></i> Detail Nilai
                                         </a>
                                         <a href="{{ route('student.pdf', $s->id) }}"
                                             class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition">
@@ -216,7 +216,7 @@
                                             @method('DELETE')
                                             <button type="submit" disabled
                                                 class="inline-block bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm shadow transition cursor-not-allowed opacity-60">
-                                                🗑️ Hapus Murid
+                                                <i class="bi bi-trash"></i> Hapus Murid
                                             </button>
                                         </form>
                                     @endif
