@@ -97,13 +97,13 @@
                                             required>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <input type="number" class="w-24 bg-gray-100 border-gray-200 rounded-md"
+                                        <input type="number" class="w-24 bg-gray-100 border-gray-200 rounded-md text-center"
                                             value="{{ $s->total_kesalahan }}" readonly>
                                         <input type="hidden" name="surat[{{ $index }}][total_kesalahan]"
                                             value="{{ $s->total_kesalahan }}">
                                     </td>
                                     <td class="px-4 py-3">
-                                        <input type="number" class="w-20 bg-gray-100 border-gray-200 rounded-md"
+                                        <input type="number" class="w-20 bg-gray-100 border-gray-200 rounded-md text-center"
                                             value="{{ $s->nilai }}" readonly>
                                         <input type="hidden" name="surat[{{ $index }}][nilai]"
                                             value="{{ $s->nilai }}">
