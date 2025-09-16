@@ -481,9 +481,9 @@ class StudentController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function sertifikatDownloadImage(Request $request)
+    public function certificateIndex(Request $request)
     {
-        return view('students.certificate-download-image');
+        return view('students.certificate-index');
     }
 
     // ==========================

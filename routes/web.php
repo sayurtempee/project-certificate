@@ -39,5 +39,5 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
-    Route::get('/rekap/downloads/certificate', [StudentController::class, 'sertifikatDownloadImage'])->name('students.download.img');
+    Route::get('/certificate', [StudentController::class, 'certificateIndex'])->name('students.certificate.index');
 });

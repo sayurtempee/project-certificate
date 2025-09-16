@@ -12,7 +12,7 @@
             @elseif (Auth::user()->role == 'teacher')
                 <a href="{{ route('student.index') }}" class="block hover:text-yellow-300">Daftar Murid</a>
                 <a href="{{ route('student.create') }}" class="block hover:text-yellow-300">Tambah Sertifikat</a>
-                <a href="{{ route('students.download.img') }}" class="block hover:text-yellow-300">Sertifikat Download Image</a>
+                <a href="{{ route('students.certificate.index') }}" class="block hover:text-yellow-300">Sertifikat Image</a>
             @endif
         @endauth
     </nav>
