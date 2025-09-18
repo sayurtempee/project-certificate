@@ -41,7 +41,7 @@
     {{-- Auto Logout jika idle --}}
     <script>
         let idleTime = 0;
-        const maxIdle = 60; // menit
+        const maxIdle = 10; // menit
 
         function resetIdleTime() {
             idleTime = 0;
@@ -60,7 +60,7 @@
             if (idleTime >= maxIdle) {
                 document.getElementById('autoLogoutForm').submit();
             }
-        }, 60000); // cek tiap 1 menit
+        }, 30000); // cek tiap 30 detik
     </script>
 
     <form id="autoLogoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">

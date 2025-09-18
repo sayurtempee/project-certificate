@@ -22,6 +22,12 @@
                     <i class="bi bi-mortarboard-fill text-lg"></i>
                     Daftar Murid
                 </a>
+                <a href="{{ route('activity.logs.index') }}"
+                    class="flex items-center gap-2 py-2 px-3 rounded-lg transition
+                    {{ request()->routeIs('history.*')
+                        ? 'bg-blue-600 text-yellow-300 shadow-md'
+                        : 'hover:bg-blue-700 hover:text-yellow-200' }}">
+                    <i class="bi bi-clock-history text-lg"></i> History </a>
             @elseif (Auth::user()->role == 'teacher')
                 <a href="{{ route('student.index') }}"
                     class="flex items-center gap-2 py-2 px-3 rounded-lg transition

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -11,6 +12,15 @@ use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
+    private function logActivity($userId, $action, $description)
+    {
+        ActivityLog::create([
+            'user_id'     => $userId,
+            'action'      => $action,
+            'description' => $description,
+        ]);
+    }
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -18,6 +28,10 @@ class AuthController extends Controller
 
     public function showForgotForm()
     {
+        // log buka halaman forgot password
+        if (Auth::check() && Auth::user()->role === 'teacher') {
+            $this->logActivity(Auth::id(), 'forgot_password', 'Membuka halaman lupa password');
+        }
         return view('auth.forgot-password');
     }
 
@@ -29,6 +43,11 @@ class AuthController extends Controller
             $request->only('email')
         );
 
+        // log kirim reset link
+        if (Auth::check() && Auth::user()->role === 'teacher') {
+            $this->logActivity(Auth::id(), 'forgot_password', 'Mengirim link reset password ke email: ' . $request->email);
+        }
+
         return $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
@@ -36,6 +55,11 @@ class AuthController extends Controller
 
     public function showResetForm(Request $request, $token)
     {
+        // log buka halaman reset password
+        if (Auth::check() && Auth::user()->role === 'teacher') {
+            $this->logActivity(Auth::id(), 'reset_password', 'Membuka halaman reset password dengan token: ' . $token);
+        }
+
         return view('auth.reset-password', ['token' => $token, 'email' => $request->email]);
     }
 
@@ -55,6 +79,11 @@ class AuthController extends Controller
                 ])->save();
             }
         );
+
+        // log reset password
+        if (Auth::check() && Auth::user()->role === 'teacher') {
+            $this->logActivity(Auth::id(), 'reset_password', 'Melakukan reset password untuk email: ' . $request->email);
+        }
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', __($status))
@@ -87,6 +116,11 @@ class AuthController extends Controller
                 'last_login_token' => Str::random(60), // token unik
             ]);
 
+            // log login
+            if (Auth::check() && Auth::user()->role === 'teacher') {
+                $this->logActivity(Auth::id(), 'login', 'User melakukan login');
+            }
+
             return redirect()->route('dashboard')->with('success', 'Login berhasil!');
         }
 
@@ -104,6 +138,10 @@ class AuthController extends Controller
                 'is_online' => false,
                 'last_login_token' => null, // reset token
             ]);
+        }
+
+        if (Auth::check() && Auth::user()->role === 'teacher') {
+            $this->logActivity(Auth::id(), 'logout', 'User melakukan logout');
         }
 
         Auth::logout();

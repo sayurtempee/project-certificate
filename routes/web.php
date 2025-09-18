@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -40,4 +41,8 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
     Route::get('/certificate', [StudentController::class, 'certificateIndex'])->name('students.certificate.index');
+});
+Route::middleware(['auth', 'can:isAdmin'])->group(function () {
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->name('activity.logs.index');
 });
