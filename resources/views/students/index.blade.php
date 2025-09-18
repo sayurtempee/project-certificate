@@ -133,46 +133,20 @@
         @endif
 
         @if (Auth::user()->role == 'admin')
-            <div x-data="{ open: false }" class="relative inline-block text-left mb-4">
-                <!-- Trigger -->
-                <button @click="open = !open" type="button"
-                    class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm
-               px-4 py-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 gap-2"
-                    id="menu-button" aria-expanded="true" aria-haspopup="true">
-                    <i class="bi bi-archive"></i>
-                    Rekap Tahunan
-                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
+            <div class="mb-4">
+                <select onchange="if(this.value) window.location.href=this.value"
+                    class="w-full rounded-xl border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium
+                text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
 
-                <!-- Dropdown -->
-                <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2"
-                    class="absolute right-0 mt-2 w-56 rounded-2xl shadow-xl bg-white ring-1 ring-black ring-opacity-5 origin-top-right"
-                    @click.away="open = false">
-
-                    <div class="py-2">
-                        @forelse ($tahunList as $i => $tahun)
-                            <a href="{{ route('students.rekap', $tahun) }}"
-                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 rounded-md
-                              opacity-0 translate-y-2
-                              animate-fade-in-down [animation-delay:{{ $i * 100 }}ms]"
-                                style="animation-fill-mode: forwards;">
-                                <i class="bi bi-file-earmark-pdf text-red-500"></i>
-                                Download Rekap {{ $tahun }}
-                                <i class="bi bi-download ml-auto text-gray-400"></i>
-                            </a>
-                        @empty
-                            <div class="px-4 py-2 text-sm text-gray-500 text-center">
-                                Tidak ada rekapan tahunan
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
+                    <option selected disabled>📦 Rekap Tahunan</option>
+                    @forelse ($tahunList as $tahun)
+                        <option value="{{ route('students.rekap', $tahun) }}">
+                            📄 Download Rekap {{ $tahun }}
+                        </option>
+                    @empty
+                        <option disabled>Tidak ada rekapan tahunan</option>
+                    @endforelse
+                </select>
             </div>
         @endif
 

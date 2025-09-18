@@ -24,28 +24,28 @@
                 <div>
                     <label class="block font-semibold mb-1">Nama Murid</label>
                     <input type="text" name="nama" value="{{ old('nama') }}"
-                        class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 bg-white rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
                 </div>
 
                 {{-- No Induk --}}
                 <div>
                     <label class="block font-semibold mb-1">No Induk</label>
                     <input type="text" name="no_induk" value="{{ old('no_induk') }}"
-                        class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 bg-white rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
                 </div>
 
                 {{-- Penyimak --}}
                 <div>
                     <label class="block font-semibold mb-1">Penyimak</label>
                     <input type="text" name="penyimak" value="{{ auth()->user()->name }}"
-                        class="w-full border rounded-lg p-2 bg-gray-100" readonly>
+                        class="w-full border border-gray-300 bg-gray-100 rounded-lg p-2 text-gray-700" readonly>
                 </div>
 
                 {{-- Juz --}}
                 <div>
                     <label class="block font-semibold mb-1">Juz</label>
                     <select name="juz" id="juzSelect"
-                        class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 bg-white rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
                         <option value="">-- Pilih Juz --</option>
                         @foreach ($juzData as $juz => $surat)
                             <option value="{{ $juz }}">Juz {{ $juz }}</option>
@@ -57,7 +57,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full border rounded-lg overflow-hidden text-sm" id="suratTable">
                         <thead>
-                            <tr class="bg-gray-100 text-gray-700">
+                            <tr class="bg-blue-50 text-gray-700">
                                 <th class="p-2 border">Surat ke-</th>
                                 <th class="p-2 border">Nama Surat</th>
                                 <th class="p-2 border">Jumlah Ayat</th>
@@ -114,30 +114,30 @@
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][kelancaran]"
-                                       class="w-20 border rounded p-1 text-center"
-                                       oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border border-gray-300 bg-white rounded p-1 text-center focus:ring focus:ring-blue-300"
+                                       oninput="hitungNilai(${index})" min="0" max="33" value="0">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][fasohah]"
-                                       class="w-20 border rounded p-1 text-center"
-                                       oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border border-gray-300 bg-white rounded p-1 text-center focus:ring focus:ring-blue-300"
+                                       oninput="hitungNilai(${index})" min="0" max="33" value="0">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][tajwid]"
-                                       class="w-20 border rounded p-1 text-center"
-                                       oninput="hitungNilai(${index})" min="0" max="33">
+                                       class="w-20 border border-gray-300 bg-white rounded p-1 text-center focus:ring focus:ring-blue-300"
+                                       oninput="hitungNilai(${index})" min="0" max="33" value="0">
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][total_kesalahan]"
-                                       class="w-20 border rounded p-1 bg-gray-100 text-center" readonly>
+                                       class="w-20 border border-gray-300 bg-gray-100 rounded p-1 text-center" readonly>
                             </td>
                             <td class="border p-2">
                                 <input type="number" name="surat[${index}][nilai]"
-                                       class="w-20 border rounded p-1 bg-gray-100 text-center" readonly>
+                                       class="w-20 border border-gray-300 bg-gray-100 rounded p-1 text-center" readonly>
                             </td>
                             <td class="border p-2">
                                 <input type="text" name="surat[${index}][predikat]"
-                                       class="w-20 border rounded p-1 bg-gray-100 text-center" readonly>
+                                       class="w-20 border border-gray-300 bg-gray-100 rounded p-1 text-center" readonly>
                             </td>
                         </tr>
                     `;
