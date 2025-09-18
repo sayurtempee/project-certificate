@@ -34,6 +34,38 @@
 
     {{-- Scripts tambahan dari child view --}}
     @stack('scripts')
+
+    {{-- Scripts tambahan dari child view --}}
+    @stack('scripts')
+
+    {{-- Auto Logout jika idle --}}
+    <script>
+        let idleTime = 0;
+        const maxIdle = 60; // menit
+
+        function resetIdleTime() {
+            idleTime = 0;
+        }
+
+        // Deteksi aktivitas user
+        window.onload = resetIdleTime;
+        document.onmousemove = resetIdleTime;
+        document.onkeypress = resetIdleTime;
+        document.onclick = resetIdleTime;
+        document.onscroll = resetIdleTime;
+
+        // Hitung idle tiap menit
+        setInterval(function() {
+            idleTime++;
+            if (idleTime >= maxIdle) {
+                document.getElementById('autoLogoutForm').submit();
+            }
+        }, 60000); // cek tiap 1 menit
+    </script>
+
+    <form id="autoLogoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
+        @csrf
+    </form>
 </body>
 
 </html>
