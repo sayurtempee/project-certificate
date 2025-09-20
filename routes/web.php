@@ -45,4 +45,8 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
 Route::middleware(['auth', 'can:isAdmin'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])
         ->name('activity.logs.index');
+    Route::get('/activity-logs/pdf', [ActivityLogController::class, 'backupPdf'])
+        ->name('activity.logs.pdf');
+    Route::delete('/activity-logs/clear', [ActivityLogController::class, 'clear'])
+        ->name('activity.logs.clear');
 });
