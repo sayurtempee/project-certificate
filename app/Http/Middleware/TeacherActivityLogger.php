@@ -30,11 +30,11 @@ class TeacherActivityLogger
                 'login'           => 'Membuka halaman login',
                 'login.process'   => 'User melakukan login',
                 'logout'          => 'User melakukan logout',
-                'students.certificate.index' => 'Melihat daftar sertifikat murid',
-                'dashboard'        => 'Mengakses dashboard',
+                'dashboard'        => 'Melihat isi dashboard',
                 'student.show'    => 'Melihat detail murid',
                 'student.updateInline' => 'Mengupdate data murid secara inline',
                 'student.pdf'     => 'Mendownload PDF laporan murid',
+                'certificate.index' => 'Melihat daftar sertifikat murid',
                 default           => 'Aksi lain',
             };
             ActivityLog::create([
