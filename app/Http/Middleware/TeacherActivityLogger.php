@@ -34,7 +34,7 @@ class TeacherActivityLogger
                 'student.show'    => 'Melihat detail murid',
                 'student.updateInline' => 'Mengupdate data murid secara inline',
                 'student.pdf'     => 'Mendownload PDF laporan murid',
-                'certificate.index' => 'Melihat daftar sertifikat murid',
+                'certificates.index' => 'Melihat daftar sertifikat murid',
                 default           => 'Aksi lain',
             };
             ActivityLog::create([

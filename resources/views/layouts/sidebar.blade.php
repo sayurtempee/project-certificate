@@ -45,7 +45,7 @@
                     <i class="bi bi-plus-square-fill text-lg"></i>
                     Tambah Sertifikat
                 </a>
-                <a href="{{ route('certificate.index') }}"
+                <a href="{{ route('certificates.index') }}"
                     class="flex items-center gap-2 py-2 px-3 rounded-lg transition
                    {{ request()->routeIs('students.certificate.*')
                        ? 'bg-blue-600 text-yellow-300 shadow-md'
