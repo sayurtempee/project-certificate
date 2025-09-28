@@ -13,13 +13,13 @@ class Student extends Model
         'juz',
     ];
 
-    // protected $casts = [
-    //     'juz' => 'integer',
-    // ];
-
     // Relasi ke nilai per surat
     public function surats()
     {
         return $this->hasMany(StudentSurat::class, 'student_id');
     }
+
+    // protected $casts = [
+    //     'juz' => 'integer',
+    // ];
 }

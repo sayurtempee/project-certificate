@@ -42,6 +42,8 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');    // Rekap per tahun (PDF)
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
     Route::get('/certificate', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificate/{id}', [CertificateController::class, 'showCertificate'])->name('certificates.showCertificate');
+    Route::get('/certificate/{id}/download', [CertificateController::class, 'downloadCertificate'])->name('certificates.downloadCertificate');
 });
 Route::middleware(['auth', 'can:isAdmin'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])
