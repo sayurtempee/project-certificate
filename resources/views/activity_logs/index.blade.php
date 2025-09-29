@@ -11,7 +11,7 @@
                     <form method="GET" action="{{ route('activity.logs.index') }}" class="flex items-center gap-2">
                         <div class="relative">
                             <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Cari teacher..."
+                                placeholder="Cari nama guru..."
                                 class="w-64 pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
