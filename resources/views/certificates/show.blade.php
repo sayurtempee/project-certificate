@@ -17,26 +17,33 @@
                 class="absolute inset-0 w-full h-full object-cover rounded-lg">
 
             <!-- Konten Sertifikat -->
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-black px-6">
-                <h1 class="text-3xl font-bold mb-2">SERTIFIKAT</h1>
-                <p class="text-sm mb-1">Diberikan kepada</p>
-                <h2 class="text-2xl font-semibold mb-1">{{ $student->nama }}</h2>
-                <p class="text-sm mb-1">No. Induk: {{ $student->no_induk }}</p>
-                <p class="text-sm mb-1">Telah menyelesaikan penyimakan Juz {{ $student->juz }}</p>
+            <div class="absolute inset-0 text-black px-12 py-16 flex flex-col justify-between">
 
-                @php
-                    $nilai = $student->surats->avg('nilai');
-                @endphp
+                <!-- Bagian tengah (judul + nama + nilai) -->
+                <div class="text-center mt-6">
+                    <h1 class="text-3xl font-bold mt-8">SERTIFIKAT</h1>
+                    <p class="text-sm mb-1">Diberikan kepada</p>
+                    <h2 class="text-2xl font-bold mb-1 underline">{{ $student->nama }}</h2>
+                    <p class="text-sm mb-1 font-semibold">No. Induk: {{ $student->no_induk }}</p>
+                    <p class="text-sm mb-1">Telah menyelesaikan penyimakan <span class="font-semibold">Juz {{ $student->juz }}</span></p>
 
-                <p class="text-lg font-semibold mt-2">
-                    Nilai Akhir: {{ $nilai ? number_format($nilai, 2) : '-' }}
-                </p>
+                    @php
+                        $nilai = $student->surats->avg('nilai');
+                    @endphp
+                    <p class="text-lg font-bold mt-3">
+                        Nilai Akhir: {{ $nilai ? number_format($nilai, 0) : '-' }}
+                    </p>
+                </div>
 
-                <div class="mt-6 text-sm">
-                    Jakarta, {{ now()->translatedFormat('d F Y') }}<br>
-                    Kepala Sekolah <br><br>
-                    <strong>Neor Imanah, M.Pd</strong><br>
-                    NIP: 1234567890
+                <!-- Bagian tanda tangan -->
+                <div class="text-center mt-6">
+                    <span>{{ $certificate['tempat'] }}, {{ $certificate['tanggal'] }}</span>
+                    <br>
+                    Kepala Sekolah
+                    <div class="mt-24">
+                        <strong class="block">{{ $certificate['nama_kepala_sekolah'] }}</strong>
+                        <span class="block">NIP: {{ $certificate['nip'] }}</span>
+                    </div>
                 </div>
             </div>
         </div>

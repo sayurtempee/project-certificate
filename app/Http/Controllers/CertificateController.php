@@ -26,7 +26,15 @@ class CertificateController extends Controller
         }
 
         $student = Student::with('surats')->findOrFail($id);
-        return view('certificates.show', compact('student'));
+        return view('certificates.show', compact('student'), [
+            'student' => $student,
+            'certificate' => [
+                'tempat' => 'Jakarta',
+                'tanggal' => now()->translatedFormat('d F Y'),
+                'nama_kepala_sekolah' => 'Neor Imanah, M.Pd',
+                'nip' => '1234567890'
+            ]
+        ]);
     }
 
     public function downloadCertificate($id)
@@ -38,7 +46,7 @@ class CertificateController extends Controller
         $student = Student::with('surats')->findOrFail($id);
 
         $pdf = Pdf::loadView('certificates.template', compact('student'))
-            ->setPaper([0, 0, 1280, 905], 'landscape');
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download('sertifikat-murid-' . $student->id . '.pdf');
     }

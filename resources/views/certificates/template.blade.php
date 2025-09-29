@@ -59,7 +59,7 @@
         <div class="description">
             Yang telah dinyatakan lulus tasmi’ sekali duduk juz 30<br>
             dengan nilai {{ $student->nilai }} ({{ $student->predikat }})<br>
-            Pada tanggal {{ $student->tanggal_lulus->format('d F Y') }}<br>
+            Pada tanggal {{ now()->translatedFormat('d F Y') }}<br>
             yang telah diprogramkan di SD Islam Al Azhar 13 Rawamangun.<br><br>
             Semoga sertifikat penghargaan ini menjadi motivasi<br>
             untuk terus menghafal Al-Qur’an.
