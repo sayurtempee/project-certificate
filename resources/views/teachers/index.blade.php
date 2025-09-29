@@ -156,7 +156,7 @@
                     <div>
                         <label class="block font-semibold">Nama</label>
                         <input type="text" name="name" x-model="editData.name" class="w-full border rounded-lg p-2"
-                            required>
+                            readonly required>
                     </div>
 
                     <div>
@@ -176,10 +176,10 @@
                         <input type="password" name="password_confirmation" class="w-full border rounded-lg p-2">
                     </div>
 
-                    <div>
+                    {{--  <div>
                         <label class="block font-semibold">Foto Baru</label>
                         <input type="file" name="photo" class="w-full border rounded-lg p-2">
-                    </div>
+                    </div>  --}}
 
                     <div class="flex justify-end space-x-2">
                         <button type="button" @click="openEdit = false"
