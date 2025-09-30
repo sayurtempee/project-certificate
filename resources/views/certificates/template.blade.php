@@ -26,7 +26,7 @@
             font-size: 28px;
             font-weight: bold;
             text-align: center;
-            margin-top: 220px;
+            margin-top: 150px;
         }
 
         .no-induk {
@@ -53,20 +53,20 @@
 
 <body>
     <div class="content">
-        <div class="name">{{ $student->name }}</div>
+        <div class="name">{{ $student->nama }}</div>
         <div class="no-induk">Nomor Induk: {{ $student->no_induk }}</div>
 
         <div class="description">
-            Yang telah dinyatakan lulus tasmi’ sekali duduk juz 30<br>
-            dengan nilai {{ $student->nilai }} ({{ $student->predikat }})<br>
-            Pada tanggal {{ now()->translatedFormat('d F Y') }}<br>
+            Yang telah dinyatakan lulus tasmi’ sekali duduk Juz {{ $student->juz }}<br>
+            dengan nilai {{ $student->surats->first()->nilai ?? '-' }} ({{ $student->surats->first()->predikat }})<br>
+            Pada tanggal {{ $student->tanggal_lulus->translatedFormat('d F Y') }}<br>
             yang telah diprogramkan di SD Islam Al Azhar 13 Rawamangun.<br><br>
             Semoga sertifikat penghargaan ini menjadi motivasi<br>
             untuk terus menghafal Al-Qur’an.
         </div>
 
         <div class="footer">
-            Jakarta, {{ now()->translatedFormat('d F Y') }} <br>
+            Jakarta, {{ $student->tanggal_lulus->translatedFormat('d F Y') }} <br>
             Kepala Sekolah <br><br><br>
             <strong>Neor Imanah, M.Pd</strong><br>
             NIP: 1234567890

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -48,6 +49,28 @@ class CertificateController extends Controller
         $pdf = Pdf::loadView('certificates.template', compact('student'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->download('sertifikat-murid-' . $student->id . '.pdf');
+        return $pdf->download('sertifikat-murid-' . $student->nama . '.pdf');
+    }
+
+    public function updateTanggalLulus(Request $request, $id)
+    {
+        // Cek role teacher
+        if (!(Auth::check() && Auth::user()->role === 'teacher')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Validasi input
+        $request->validate([
+            'tanggal_lulus' => 'nullable|date',
+        ]);
+
+        $student = Student::findOrFail($id);
+
+        // Simpan ke database
+        $tanggalLulus = $request->input('tanggal_lulus');
+        $student->tanggal_lulus = $tanggalLulus ? Carbon::parse($tanggalLulus) : null;
+        $student->save();
+
+        return redirect()->route('certificates.index')->with('success', 'Tanggal lulus berhasil di update.');
     }
 }

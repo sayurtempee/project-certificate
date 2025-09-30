@@ -37,7 +37,7 @@
 
                 <!-- Bagian tanda tangan -->
                 <div class="text-center mt-6">
-                    <span>{{ $certificate['tempat'] }}, {{ $certificate['tanggal'] }}</span>
+                    <span>{{ $certificate['tempat'] }}, {{ $student->tanggal_lulus->translatedFormat('d-M-Y') }}</span>
                     <br>
                     Kepala Sekolah
                     <div class="mt-24">

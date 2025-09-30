@@ -44,6 +44,7 @@ Route::middleware(['auth', UpdateLastSeen::class])->group(function () {
     Route::get('/certificate', [CertificateController::class, 'index'])->name('certificates.index');
     Route::get('/certificate/{id}', [CertificateController::class, 'showCertificate'])->name('certificates.showCertificate');
     Route::get('/certificate/{id}/download', [CertificateController::class, 'downloadCertificate'])->name('certificates.downloadCertificate');
+    Route::post('/certificate/{id}', [CertificateController::class, 'updateTanggalLulus'])->name('certificates.updateTanggalLulus');
 });
 Route::middleware(['auth', 'can:isAdmin'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])

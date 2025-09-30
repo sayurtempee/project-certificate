@@ -20,6 +20,7 @@
                             <th class="px-4 py-3 border-b font-semibold">Nama</th>
                             <th class="px-4 py-3 border-b font-semibold">No Induk</th>
                             <th class="px-4 py-3 border-b font-semibold">Juz</th>
+                            <th class="px-4 py-3 border-b font-semibold">Tanggal Lulus</th>
                             <th class="px-4 py-3 border-b font-semibold">Aksi</th>
                         </tr>
                     </thead>
@@ -30,6 +31,28 @@
                                 <td class="px-4 py-3 border-b font-medium text-slate-700">{{ $student->nama }}</td>
                                 <td class="px-4 py-3 border-b">{{ $student->no_induk }}</td>
                                 <td class="px-4 py-3 border-b">{{ $student->juz }}</td>
+
+                                <!-- Form update tanggal_lulus -->
+                                <td class="px-4 py-3 border-b">
+                                    <div class="text-sm text-slate-600 mt-1">
+                                        Tanggal Lulus (Read-only):
+                                        {{ $student->tanggal_lulus ? $student->tanggal_lulus->translatedFormat('d/M/Y') : '-' }}
+                                    </div>
+
+                                    <form action="{{ route('certificates.updateTanggalLulus', $student->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        <input type="date" name="tanggal_lulus" id="tanggal_lulus_{{ $student->id }}"
+                                            value="{{ $student->tanggal_lulus ? $student->tanggal_lulus->format('Y-m-d') : '' }}"
+                                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-1">
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg shadow hover:bg-yellow-700">
+                                            <i class="bi bi-save mr-1"></i> Simpan
+                                        </button>
+                                    </form>
+                                </td>
+
+                                <!-- Tombol aksi -->
                                 <td class="px-4 py-3 border-b space-x-2">
                                     <a href="{{ route('certificates.showCertificate', $student->id) }}"
                                         class="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700">

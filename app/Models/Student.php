@@ -11,6 +11,7 @@ class Student extends Model
         'no_induk',
         'penyimak',
         'juz',
+        'tanggal_lulus',
     ];
 
     // Relasi ke nilai per surat
@@ -19,7 +20,7 @@ class Student extends Model
         return $this->hasMany(StudentSurat::class, 'student_id');
     }
 
-    // protected $casts = [
-    //     'juz' => 'integer',
-    // ];
+    protected $casts = [
+        'tanggal_lulus' => 'datetime',
+    ];
 }
