@@ -67,9 +67,15 @@ class AuthController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
-        ]);
+                'email' => 'required|string|email',
+                'password' => 'required|string|confirmed|min:6',
+            ],
+            [
+                'password.min' => 'Minimal Password 6 Karakter',
+                'password.confirmed' => 'Konfirmasi password tidak sesuai',
+                'email.email' => 'Format email tidak valid',
+            ]
+        );
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

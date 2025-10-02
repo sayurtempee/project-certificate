@@ -9,6 +9,24 @@
             Masukkan password baru untuk akun kamu.
         </p>
 
+        {{-- Pesan sukses --}}
+        @if (session('status'))
+            <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        {{-- Pesan error umum --}}
+        @if ($errors->any())
+            <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('password.update') }}" method="POST" class="space-y-4 text-left">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
