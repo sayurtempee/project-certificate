@@ -30,7 +30,6 @@ class CertificateController extends Controller
         return view('certificates.show', compact('student'), [
             'student' => $student,
             'certificate' => [
-                'tempat' => 'Jakarta',
                 'tanggal' => now()->translatedFormat('d F Y'),
                 'nama_kepala_sekolah' => 'Neor Imanah, M.Pd',
                 'nip' => '1234567890'
@@ -46,8 +45,13 @@ class CertificateController extends Controller
 
         $student = Student::with('surats')->findOrFail($id);
 
-        $pdf = Pdf::loadView('certificates.template', compact('student'))
-            ->setPaper('a4', 'landscape');
+        $pdf = Pdf::loadView('certificates.template', compact('student'), [
+            'student' => $student,
+            'certificate' => [
+                'nama_kepala_sekolah' => 'Neor Imanah, M.Pd',
+                'nip' => '1234567890'
+            ]
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->download('sertifikat-murid-' . $student->nama . '.pdf');
     }
@@ -71,6 +75,26 @@ class CertificateController extends Controller
         $student->tanggal_lulus = $tanggalLulus ? Carbon::parse($tanggalLulus) : null;
         $student->save();
 
-        return redirect()->route('certificates.index')->with('success', 'Tanggal lulus berhasil di update.');
+        return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan Tanggal Kelulusan.');
+    }
+
+    public function updateTempatKelulusan(Request $request, $id_)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+            abort(403, 'Unauthorized');
+        }
+
+        $validateData = $request->validate([
+            'tempat_kelulusan' => 'nullable|string|max:255'
+        ]);
+
+        $student = Student::findOrFail($id_);
+
+        // jika kosong, default Jakarta
+        $student->tempat_kelulusan = $validateData['tempat_kelulusan'] ?: 'Jakarta';
+        $student->save();
+
+        return redirect()->route('certificates.index')
+            ->with('success', 'Berhasil Menambahkan Tempat Kelulusan.');
     }
 }

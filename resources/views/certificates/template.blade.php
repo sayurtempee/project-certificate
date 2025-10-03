@@ -8,68 +8,103 @@
         body {
             margin: 0;
             padding: 0;
-            background: url("{{ public_path('img/template/certificate.jpeg') }}") no-repeat center center;
-            background-size: cover;
             font-family: 'Times New Roman', serif;
         }
 
-        .content {
+        .certificate {
             position: relative;
             width: 100%;
-            height: 905px;
-            /* sesuai setPaper height */
-            padding: 100px 80px;
-            /* sesuaikan dengan posisi */
+            height: 100%;
+            min-height: 530px;
+            padding: 40px 60px;
+            background: url("{{ public_path('img/template/certificate.jpeg') }}") no-repeat center center;
+            background-size: cover;
         }
 
-        .name {
+        .title {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .title h1 {
             font-size: 28px;
             font-weight: bold;
-            text-align: center;
-            margin-top: 150px;
+            margin-bottom: 5px;
         }
 
-        .no-induk {
+        .title p {
+            font-size: 14px;
+            margin: 2px 0;
+        }
+
+        .student-name {
+            text-align: center;
+            margin: 15px 0;
             font-size: 20px;
-            text-align: center;
-            margin-top: 10px;
+            font-weight: bold;
+            text-decoration: underline;
         }
 
-        .description {
-            margin-top: 40px;
+        .details {
             text-align: center;
-            font-size: 18px;
-            line-height: 1.6;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
         }
 
         .footer {
-            position: absolute;
-            bottom: 80px;
-            right: 100px;
             text-align: center;
+            margin-top: 80px;
+            font-size: 14px;
+        }
+
+        .footer .signature {
+            margin-top: 60px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div class="content">
-        <div class="name">{{ $student->nama }}</div>
-        <div class="no-induk">Nomor Induk: {{ $student->no_induk }}</div>
-
-        <div class="description">
-            Yang telah dinyatakan lulus tasmi’ sekali duduk Juz {{ $student->juz }}<br>
-            dengan nilai {{ $student->surats->first()->nilai ?? '-' }} ({{ $student->surats->first()->predikat }})<br>
-            Pada tanggal {{ $student->tanggal_lulus->translatedFormat('d F Y') }}<br>
-            yang telah diprogramkan di SD Islam Al Azhar 13 Rawamangun.<br><br>
-            Semoga sertifikat penghargaan ini menjadi motivasi<br>
-            untuk terus menghafal Al-Qur’an.
+    <div class="certificate">
+        <!-- Judul -->
+        <div class="title">
+            <h1>SERTIFIKAT</h1>
+            <p>Diberikan kepada</p>
         </div>
 
+        <!-- Nama Siswa -->
+        <div class="student-name">{{ $student->nama }}</div>
+
+        <!-- Detail -->
+        <div class="details">
+            <p>No. Induk: {{ $student->no_induk }}</p>
+            <p>Telah menyelesaikan penyimakan Juz <strong>{{ $student->juz }}</strong></p>
+        </div>
+
+        <!-- Nilai -->
+        @php
+            $nilai = $student->surats->avg('nilai');
+        @endphp
+        <div class="score">
+            Nilai Akhir: {{ $nilai ? number_format($nilai, 0) : '-' }}
+        </div>
+
+        <!-- Tanda Tangan -->
         <div class="footer">
-            Jakarta, {{ $student->tanggal_lulus->translatedFormat('d F Y') }} <br>
-            Kepala Sekolah <br><br><br>
-            <strong>Neor Imanah, M.Pd</strong><br>
-            NIP: 1234567890
+            <span>{{ $student['tempat_kelulusan'] }}, {{ $student->tanggal_lulus->translatedFormat('d F Y') }}</span>
+            <br>
+            Kepala Sekolah
+            <div class="signature">
+                {{ $certificate['nama_kepala_sekolah'] }}<br>
+                NIP: {{ $certificate['nip'] }}
+            </div>
         </div>
     </div>
 </body>

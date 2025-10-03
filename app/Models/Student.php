@@ -12,6 +12,7 @@ class Student extends Model
         'penyimak',
         'juz',
         'tanggal_lulus',
+        'tempat_kelulusan',
     ];
 
     // Relasi ke nilai per surat
