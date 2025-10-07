@@ -37,12 +37,12 @@
 
                 <!-- Bagian tanda tangan -->
                 <div class="text-center mt-6">
-                    <span>{{ $student['tempat_kelulusan'] }}, {{ $student->tanggal_lulus->translatedFormat('d-M-Y') }}</span>
+                    <span>{{ $student['tempat_kelulusan'] ?? 'Tempat Belum Ditetapkan' }}, {{ $student->tanggal_lulus?->translatedFormat('d-M-Y') ?? 'Tanggal Belum Ditetapkan' }}</span>
                     <br>
                     Kepala Sekolah
                     <div class="mt-24">
-                        <strong class="block">{{ $certificate['nama_kepala_sekolah'] }}</strong>
-                        <span class="block">NIP: {{ $certificate['nip'] }}</span>
+                        <strong class="block">{{ $student->nm_kepsek ?? 'Nama Belum Ditetapkan' }}</strong>
+                        <span class="block">NIP: {{ $student->nip_kepsek ?? 'NIP Belum Ditetapkan' }}</span>
                     </div>
                 </div>
             </div>

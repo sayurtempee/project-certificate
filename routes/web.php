@@ -70,6 +70,8 @@ Route::middleware(['auth', UpdateLastSeen::class, 'throttle:60,1'])->group(funct
     Route::get('/certificate/{id}/download', [CertificateController::class, 'downloadCertificate'])->name('certificates.downloadCertificate');
     Route::post('/certificate/{id}/tanggalLulus', [CertificateController::class, 'updateTanggalLulus'])->name('certificates.updateTanggalLulus');
     Route::post('/certificate/{id}/tempatLulus', [CertificateController::class, 'updateTempatKelulusan'])->name('certificates.updateTempatKelulusan');
+    Route::post('/certificate/{id}/nama-kepsek', [CertificateController::class, 'updateNamaKepsek'])->name('certificates.updateNamaKepsek');
+    Route::post('/certificate/{id}/nip-kepsek', [CertificateController::class, 'updateNipKepsek'])->name('certificates.updateNipKepsek');
 });
 
 // Route khusus admin

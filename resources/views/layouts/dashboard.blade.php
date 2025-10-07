@@ -63,7 +63,7 @@
                 </div>
             </header>
 
-            <main class="flex-1 p-6 bg-gradient-to-br from-blue-100 via-white to-blue-200 min-h-screen overflow-y-auto">
+            <main class="flex-1 p-6 overflow-y-auto">
                 @yield('dashboard-content')
             </main>
         </div>

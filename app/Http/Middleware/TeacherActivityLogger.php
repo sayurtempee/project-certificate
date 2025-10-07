@@ -30,13 +30,15 @@ class TeacherActivityLogger
                 'login'           => 'Membuka halaman login',
                 'login.process'   => 'User melakukan login',
                 'logout'          => 'User melakukan logout',
-                'dashboard'        => 'Melihat isi dashboard',
+                'dashboard'       => 'Melihat isi dashboard',
                 'student.show'    => 'Melihat detail murid',
                 'student.updateInline' => 'Mengupdate data murid secara inline',
                 'student.pdf'     => 'Mendownload PDF laporan murid',
-                'certificates.index' => 'Melihat daftar sertifikat murid',
-                'certificates.showCertificate' => 'Melihat detail sertifikat murid',
+                'certificates.index'   => 'Melihat daftar sertifikat murid',
+                'certificates.showCertificate'     => 'Melihat detail sertifikat murid',
                 'certificates.downloadCertificate' => 'Mendownload sertifikat murid',
+                'certificates.updateNamaKepsek'    => 'Mengupdate Nama Kepala Sekolah',
+                'certificates.updateNipKepsek'     => 'Mengupdate NIP Kepala Sekolah',
                 default           => 'Aksi lain',
             };
             ActivityLog::create([

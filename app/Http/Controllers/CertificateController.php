@@ -27,14 +27,7 @@ class CertificateController extends Controller
         }
 
         $student = Student::with('surats')->findOrFail($id);
-        return view('certificates.show', compact('student'), [
-            'student' => $student,
-            'certificate' => [
-                'tanggal' => now()->translatedFormat('d F Y'),
-                'nama_kepala_sekolah' => 'Neor Imanah, M.Pd',
-                'nip' => '1234567890'
-            ]
-        ]);
+        return view('certificates.show', compact('student'));
     }
 
     public function downloadCertificate($id)
@@ -91,10 +84,72 @@ class CertificateController extends Controller
         $student = Student::findOrFail($id_);
 
         // jika kosong, default Jakarta
-        $student->tempat_kelulusan = $validateData['tempat_kelulusan'] ?: 'Jakarta';
+        $student->tempat_kelulusan = $validateData['tempat_kelulusan']  ?: null;
         $student->save();
 
         return redirect()->route('certificates.index')
             ->with('success', 'Berhasil Menambahkan Tempat Kelulusan.');
+    }
+
+    public function updateNamaKepsek(Request $request, $id__)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+            abort(403, 'Unauthorized');
+        }
+
+        $validateData = $request->validate([
+            'nm_kepsek' => 'nullable|string|max:255'
+        ]);
+
+        $student = Student::findOrFail($id__);
+        $nipMapping = [
+            'Neor Imanah, M.Pd' => '1234567890',
+            'Euis Rahmawaty, M.Pd' => '7890123456'
+        ];
+
+        $errorMessage = null;
+        if (isset($nipMapping[$validateData['nm_kepsek']])) {
+            $expectedNip = $nipMapping[$validateData['nm_kepsek']];
+            if ($student->nip_kepsek && $student->nip_kepsek !== $expectedNip) {
+                $errorMessage = "NIP untuk {$validateData['nm_kepsek']} harus {$expectedNip}";
+            }
+
+            $student->nip_kepsek = $expectedNip;
+        }
+
+        $student->nm_kepsek = $validateData["nm_kepsek"] ?: null;
+        $student->save();
+
+        if ($errorMessage) {
+            return redirect()->back()->withInput()->with("error", $errorMessage);
+        }
+        $student->nm_kepsek = $validateData['nm_kepsek'] ?: null;;
+        $student->save();
+
+        return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan Nama Kepala Sekolah');
+    }
+
+    public function updateNipKepsek(Request $request, $nip_id)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+            abort(403, 'Unauthorized');
+        }
+
+        $validateData = $request->validate([
+            'nip_kepsek' => 'nullable|string|max:255'
+        ]);
+
+        $student = Student::findOrFail($nip_id);
+        try {
+            $student->nip_kepsek = $validateData['nip_kepsek'] ?: null;
+            $student->save();
+
+            return redirect()->route('certificates.index')
+                ->with('success', 'Berhasil Menambahkan atau Memperbarui NIP Kepala Sekolah');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 }
