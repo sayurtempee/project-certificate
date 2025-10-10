@@ -39,7 +39,7 @@ class Student extends Model
             if (isset($nipMapping[$student->nm_kepsek])) {
                 if ($student->nip_kepsek && $student->nip_kepsek !== $nipMapping[$student->nm_kepsek]) {
                     throw new \Exception(
-                        'NIP untuk' . $student->nm_kepsek . ' harus ' . $nipMapping[$student->nm_kepsek]
+                        'NIP untuk ' . $student->nm_kepsek . ' harus ' . $nipMapping[$student->nm_kepsek]
                     );
                 }
                 $student->nip_kepsek = $nipMapping[$student->nm_kepsek];
