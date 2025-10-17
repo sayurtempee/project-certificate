@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </script> {{-- Bootstrap icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    {{-- SweetAlert2 --}}
     <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
 </head>
 

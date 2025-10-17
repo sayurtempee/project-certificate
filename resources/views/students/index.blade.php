@@ -25,7 +25,7 @@
 @section('dashboard-content')
     <div class="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <h3 class="text-xl sm:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-1">
-            <i class="bi bi-book"></i> Daftar Murid Juz {{ $juz ?? 'Semua' }}
+            Daftar Murid Juz {{ $juz ?? 'Semua' }}
         </h3>
 
         {{-- Form filter --}}
@@ -101,7 +101,7 @@
         </form>
 
         {{-- Tombol Upload & Tambah (Teacher Only) --}}
-        @if (Auth::user()->role == 'teacher')
+        @if (Auth::check() && Auth::user()->role == 'teacher')
             <div class="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-3">
                 {{-- Upload CSV --}}
                 <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data"
@@ -109,7 +109,7 @@
                     @csrf
                     <label for="csvFileInput"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm rounded-lg shadow cursor-pointer transition flex items-center gap-2 w-full sm:w-auto justify-center">
-                        <i class="bi bi-upload"></i> Upload Data (CSV)
+                        <i class="bi bi-upload"></i> Upload Data Murid (CSV)
                     </label>
                     <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
                     <button type="submit" class="hidden" id="csvSubmitBtn"></button>
@@ -118,7 +118,7 @@
                 {{-- Export Sample --}}
                 <a href="{{ route('students.exportSampleCsv') }}"
                     class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 text-sm rounded-lg shadow transition flex items-center gap-2 w-full sm:w-auto justify-center">
-                    <i class="bi bi-file-earmark-arrow-down"></i> Sample CSV
+                    <i class="bi bi-file-earmark-arrow-down"></i> Download Sample (CSV)
                 </a>
 
                 {{-- Tambah Siswa --}}
@@ -130,7 +130,7 @@
                 {{-- Download Sertifikat --}}
                 <a href="{{ route('certificates.index') }}"
                     class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-sm rounded-lg shadow transition flex items-center gap-2 w-full sm:w-auto justify-center">
-                    <i class="bi bi-award"></i> Sertifikat
+                    <i class="bi bi-award"></i> Download Sertifikat
                 </a>
             </div>
         @endif
@@ -138,39 +138,44 @@
         {{-- Table siswa --}}
         <div class="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left">
+                <table class="min-w-full text-sm text-left border border-gray-200">
                     <thead class="bg-slate-800 text-white text-xs sm:text-sm uppercase">
                         <tr>
-                            <th class="px-4 sm:px-6 py-3">Nama Murid</th>
-                            <th class="px-4 sm:px-6 py-3">No Induk</th>
-                            <th class="px-4 sm:px-6 py-3">Juz</th>
-                            <th class="px-4 sm:px-6 py-3">Penyimak</th>
-                            <th class="px-4 sm:px-6 py-3 text-center">Aksi</th>
+                            <th class="px-4 sm:px-6 py-3 w-1/4">Nama Murid</th>
+                            <th class="px-4 sm:px-6 py-3 w-1/4">No Induk</th>
+                            <th class="px-4 sm:px-6 py-3 w-1/6">Juz</th>
+                            <th class="px-4 sm:px-6 py-3 w-1/6">Penyimak</th>
+                            @if (Auth::check() && Auth::user()->role === 'teacher')
+                                <th class="px-4 sm:px-6 py-3 w-1/6 text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @forelse ($students as $s)
                             <tr class="hover:bg-slate-50 transition">
-                                <td class="px-4 sm:px-6 py-3">{{ $s->nama }}</td>
-                                <td class="px-4 sm:px-6 py-3">{{ $s->no_induk }}</td>
-                                <td class="px-4 sm:px-6 py-3">{{ $s->juz ?? $s->juzData }}</td>
-                                <td class="px-4 sm:px-6 py-3">{{ $s->penyimak ?? '-' }}</td>
-                                <td class="px-4 sm:px-6 py-3 text-center flex flex-wrap justify-center gap-2">
-                                    @if (Auth::user()->role == 'teacher')
-                                        <a href="{{ route('student.show', $s->id) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-xs sm:text-sm shadow transition">
-                                            <i class="bi bi-ticket-detailed"></i> Detail
-                                        </a>
-                                        <a href="{{ route('student.pdf', $s->id) }}"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs sm:text-sm shadow transition">
-                                            <i class="bi bi-file-earmark-pdf"></i> PDF
-                                        </a>
-                                    @endif
-                                </td>
+                                <td class="px-4 sm:px-6 py-3">{{ $s->nama ?? 'tidak-ada-nama' }}</td>
+                                <td class="px-4 sm:px-6 py-3">{{ $s->no_induk ?? 'tidak-ada-no-induk' }}</td>
+                                <td class="px-4 sm:px-6 py-3">Juz {{ $s->juz ?? $s->juzData ?? 'tidak-ada-juz' }}</td>
+                                <td class="px-4 sm:px-6 py-3">{{ $s->penyimak ?? 'tidak-ada-penyimak' }}</td>
+                                @if (Auth::check() && Auth::user()->role === 'teacher')
+                                    <td class="px-4 sm:px-6 py-3 text-center">
+                                        <div class="flex flex-wrap justify-center gap-2">
+                                            <a href="{{ route('student.show', $s->id) }}"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-xs sm:text-sm shadow transition">
+                                                <i class="bi bi-ticket-detailed"></i> Detail
+                                            </a>
+                                            <a href="{{ route('student.pdf', $s->id) }}"
+                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs sm:text-sm shadow transition">
+                                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                                            </a>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="{{ Auth::check() && Auth::user()->role === 'teacher' ? 5 : 4 }}"
+                                    class="px-6 py-4 text-center text-gray-500">
                                     🚫 Belum ada data murid untuk Juz ini
                                 </td>
                             </tr>

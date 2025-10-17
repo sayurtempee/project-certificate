@@ -30,10 +30,10 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-blue-100">
-                        <th class="p-3 border text-center">#</th>
-                        <th class="p-3 border text-center">Foto</th>
-                        <th class="p-3 border text-center">Nama</th>
-                        <th class="p-3 border text-center">Email</th>
+                        <th class="p-3 border text-center">No</th>
+                        <th class="p-3 border text-center">Foto Profil</th>
+                        <th class="p-3 border text-center">Nama Guru</th>
+                        <th class="p-3 border text-center">Email Guru</th>
                         <th class="p-3 border text-center">Status</th>
                         <th class="p-3 border text-center">Aksi</th>
                     </tr>
@@ -89,7 +89,7 @@
 
                                 <!-- Tombol Hapus -->
                                 <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
-                                    class="inline-block" onsubmit="return confirm('Yakin mau hapus guru ini?')">
+                                    class="inline-block" onsubmit="return confirmDelete(this)">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800 mx-1" title="Hapus">
@@ -149,7 +149,7 @@
                 class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
 
                 <h3 class="text-xl font-bold mb-4">Edit Guru</h3>
-                <form :action="`/teacher/${editData.id}`" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form :action="`/teacher/${editData.id}`" method="POST" enctype="multipart/form-data" class="space-y-4" onsubmit="return confirmUpdate(this)">
                     @csrf
                     @method('PUT')
 

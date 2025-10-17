@@ -290,77 +290,92 @@ class StudentController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->getRealPath();
+        $rows = file($file->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        // Baca semua baris & hilangkan BOM
-        $rows = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if (!$rows) {
             return back()->with('error', 'File kosong atau tidak bisa dibaca.');
         }
-        // Hilangkan BOM UTF-8 pada baris pertama jika ada
-        $rows[0] = preg_replace('/^\xEF\xBB\xBF/', '', $rows[0]);
 
+        // Hilangkan BOM (Byte Order Mark)
+        $rows[0] = preg_replace('/^\xEF\xBB\xBF/', '', $rows[0]);
         $csvData = array_map('str_getcsv', $rows);
 
-        // Deteksi header
-        $hasHeader = false;
+        // Jika ada header, hapus
         $first = array_map('strtolower', array_map('trim', $csvData[0] ?? []));
         if (in_array('nama', $first) && in_array('no_induk', $first)) {
-            $hasHeader = true;
             array_shift($csvData);
         }
 
-        DB::transaction(function () use ($csvData) {
-            foreach ($csvData as $row) {
-                $nama    = trim($row[0] ?? '');
-                $noInduk = trim($row[1] ?? '');
-                $juz     = isset($row[2]) && is_numeric($row[2]) ? (int)$row[2] : 0;
+        $normalize = fn($text) => strtolower(str_replace(['-', ' '], '', $text));
+        $juzData = $this->getJuzDataInternal();
 
-                if ($nama === '' || $noInduk === '') {
+        DB::transaction(function () use ($csvData, $normalize, $juzData) {
+            foreach ($csvData as $row) {
+                $nama        = trim($row[0] ?? '');
+                $noInduk     = trim($row[1] ?? '');
+                $juz         = isset($row[2]) && is_numeric($row[2]) ? (int)$row[2] : 0;
+                $namaSurat   = trim($row[3] ?? '');
+                $kelancaran  = isset($row[4]) && is_numeric($row[4]) ? (int)$row[4] : 0;
+                $fasohah     = isset($row[5]) && is_numeric($row[5]) ? (int)$row[5] : 0;
+                $tajwid      = isset($row[6]) && is_numeric($row[6]) ? (int)$row[6] : 0;
+
+                // Skip jika data penting kosong
+                if ($nama === '' || $noInduk === '' || $namaSurat === '' || $juz <= 0) {
                     continue;
                 }
 
-                // Ambil student lama (jika ada) untuk mempertahankan penyimak
+                // Ambil student lama (jika ada)
                 $oldStudent = Student::where('no_induk', $noInduk)->first();
+                $penyimak = $oldStudent->penyimak ?? (Auth::user()->role === 'teacher' ? Auth::user()->name : null);
 
-                // Tentukan penyimak: prioritas lama, jika kosong dan role teacher → pakai guru pengunggah
-                $penyimak = $oldStudent->penyimak ?? null;
-                if (!$penyimak && Auth::user()->role === 'teacher') {
-                    $penyimak = Auth::user()->name;
-                }
-
-                // Simpan / update student
+                // Simpan atau update data student
                 $student = Student::updateOrCreate(
                     ['no_induk' => $noInduk],
                     [
                         'nama'          => $nama,
-                        'juz'           => max(0, min(30, (int)$juz)),
+                        'juz'           => max(0, min(30, $juz)),
                         'penyimak'      => $penyimak,
                         'tahun_ajaran'  => now()->year,
                     ]
                 );
 
-                // Tambahkan data surat jika juz valid
-                $juzData = $this->getJuzDataInternal();
-                $jj = (int)$student->juz;
-
-                if ($jj >= 1 && $jj <= 30 && isset($juzData[$jj])) {
-                    foreach ($juzData[$jj] as $s) {
-                        $student->surats()->firstOrCreate(
-                            ['surat_ke' => (int)$s['surat_ke']],
-                            [
-                                'nama_surat'       => $s['nama_surat'],
-                                'ayat'             => (int)$s['ayat'],
-                                'kelancaran'       => 0,
-                                'fasohah'          => 0,
-                                'tajwid'           => 0,
-                                'total_kesalahan'  => 0,
-                                'nilai'            => 0,
-                                'predikat'         => 'Belum Dinilai',
-                            ]
-                        );
-                    }
+                // Pastikan JUZ ada di config
+                if (!isset($juzData[$juz])) {
+                    continue;
                 }
+
+                // Cari surat berdasarkan nama (normalize agar tahan variasi)
+                $suratConfig = collect($juzData[$juz])->first(function ($item) use ($normalize, $namaSurat) {
+                    return $normalize($item['nama_surat']) === $normalize($namaSurat);
+                });
+
+                // Jika surat tidak ditemukan di config, skip
+                if (!$suratConfig) {
+                    continue;
+                }
+
+                $total = $kelancaran + $fasohah + $tajwid;
+                $bobot = $this->getBobotByJuz($juz);
+                $nilai = max(0, 100 - ($total * $bobot));
+                $predikat = $this->getPredikat($nilai);
+
+                // Simpan atau update surat (lengkap dengan ayat dari config)
+                $student->surats()->updateOrCreate(
+                    [
+                        'student_id' => $student->id,
+                        'surat_ke' => $suratConfig['surat_ke']
+                    ],
+                    [
+                        'nama_surat'       => $suratConfig['nama_surat'],
+                        'ayat'             => $suratConfig['ayat'], // ✅ ambil dari config
+                        'kelancaran'       => $kelancaran,
+                        'fasohah'          => $fasohah,
+                        'tajwid'           => $tajwid,
+                        'total_kesalahan'  => $total,
+                        'nilai'            => $nilai,
+                        'predikat'         => $predikat,
+                    ]
+                );
             }
         });
 
@@ -375,7 +390,7 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
 
         $validated = $request->validate([
-            'surat'                  => 'required|array|min:1',
+            'surat'                  => 'array|min:1',
             'surat.*.id'             => 'required|integer|exists:student_surats,id',
             'surat.*.kelancaran'     => 'required|integer|min:0|max:33',
             'surat.*.fasohah'        => 'required|integer|min:0|max:33',
@@ -467,14 +482,16 @@ class StudentController extends Controller
             'Expires'             => '0',
         ];
 
-        $columns = ['nama', 'no_induk', 'juz'];
+        $columns = ['nama', 'no_induk', 'juz', 'surat', 'kelancaran', 'fasohah', 'tajwid'];
 
         $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns); // header
-            fputcsv($file, ['User 1', '202501', '1']);
-            fputcsv($file, ['User 2', '202502', '2']);
-            fputcsv($file, ['User 3', '202503', '3']);
+            fputcsv($file, ['User 1', '202501', '1', 'Al-Fatihah', '0', '0', '0']);
+            fputcsv($file, ['User 1', '202501', '1', 'Al-Baqarah', '0', '0', '0']);
+            fputcsv($file, ['User 2', '202502', '2', 'Al-Baqarah', '0', '0', '0']);
+            fputcsv($file, ['User 3', '202503', '3', 'Al-Baqarah', '0', '0', '0']);
+            fputcsv($file, ['User 3', '202503', '3', 'Ali Imran', '0', '0', '0']);
             fclose($file);
         };
 

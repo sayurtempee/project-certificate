@@ -7,7 +7,8 @@
         Swal.fire({
             icon: 'success',
             title: 'Berhasil',
-            text: @json(session('success'))
+            text: @json(session('success')),
+            showConfirmButton: false
         });
     @endif
 
@@ -43,6 +44,16 @@
         });
     @endif
 
+    @if (session('message'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses',
+            text: '{{ session('message') }}',
+            timer: 2500,
+            showConfirmButton: false
+        })
+    @endif
+
     @if ($errors->any())
         Swal.fire({
             icon: 'error',
@@ -50,6 +61,91 @@
             text: @json($errors->first())
         });
     @endif
+
+    function confirmDelete(form) {
+        // Cegah submit default
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: "Yakin mau hapus guru ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit form jika user klik "Ya"
+            }
+        });
+
+        return false; // pastikan form tidak submit default
+    }
+
+    function confirmDeleteHistory(form) {
+        event.preventDefault(); // cegah submit default
+
+        Swal.fire({
+            title: 'Konfirmasi Hapus Semua',
+            text: "Yakin ingin menghapus semua activity logs? Data tidak bisa dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus semua!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit form jika dikonfirmasi
+            }
+        });
+
+        return false;
+    }
+
+    function confirmdownloadPdfHistory(form) {
+        event.preventDefault(); // cegah submit default
+
+        Swal.fire({
+            title: 'Download PDF',
+            text: "Yakin ingin mendownload activity logs dalam format PDF?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, download!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit form jika dikonfirmasi
+            }
+        });
+
+        return false;
+    }
+
+    function confirmUpdate(form) {
+        event.preventDefault(); // cegah submit default
+
+        Swal.fire({
+            title: 'Konfirmasi Update',
+            text: "Yakin ingin mengupdate data guru ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, update!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit form jika dikonfirmasi
+            }
+        });
+
+        return false;
+    }
 
     // ====== GLOBAL CONFIRM HELPER ======
     // Pakai di tombol/anchor dengan attribute data-confirm, contoh:

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityLog;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -30,7 +31,8 @@ class AuthController extends Controller
     {
         // log buka halaman forgot password
         if (Auth::check() && Auth::user()->role === 'teacher') {
-            $this->logActivity(Auth::id(), 'forgot_password', 'Membuka halaman lupa password');
+            $user = Auth::user();
+            $this->logActivity(Auth::id(), 'forgot_password', "{$user->name} Membuka halaman lupa password");
         }
         return view('auth.forgot-password');
     }
@@ -45,7 +47,8 @@ class AuthController extends Controller
 
         // log kirim reset link
         if (Auth::check() && Auth::user()->role === 'teacher') {
-            $this->logActivity(Auth::id(), 'forgot_password', 'Mengirim link reset password ke email: ' . $request->email);
+            $user = Auth::user();
+            $this->logActivity(Auth::id(), 'forgot_password', "{$user->name} Mengirim link reset password ke email: " . $request->email);
         }
 
         return $status === Password::RESET_LINK_SENT
@@ -57,7 +60,8 @@ class AuthController extends Controller
     {
         // log buka halaman reset password
         if (Auth::check() && Auth::user()->role === 'teacher') {
-            $this->logActivity(Auth::id(), 'reset_password', 'Membuka halaman reset password dengan token: ' . $token);
+            $user = Auth::user();
+            $this->logActivity(Auth::id(), 'reset_password', "{$user->name} Membuka halaman reset password dengan token: " . $token);
         }
 
         return view('auth.reset-password', ['token' => $token, 'email' => $request->email]);
@@ -88,7 +92,8 @@ class AuthController extends Controller
 
         // log reset password
         if (Auth::check() && Auth::user()->role === 'teacher') {
-            $this->logActivity(Auth::id(), 'reset_password', 'Melakukan reset password untuk email: ' . $request->email);
+            $user = Auth::user();
+            $this->logActivity(Auth::id(), 'reset_password', "{$user->name} Melakukan reset password untuk email: " . $request->email);
         }
 
         return $status === Password::PASSWORD_RESET
@@ -112,22 +117,23 @@ class AuthController extends Controller
             if ($user->is_online && $user->last_login_token !== null) {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Akun ini sedang digunakan di perangkat lain.',
+                    'email' => "{$user->name} ini sedang digunakan di perangkat lain.",
                 ]);
             }
 
             // Set status online + simpan last_login_token
             $user->update([
                 'is_online' => true,
+                'last_seen' => now(),
                 'last_login_token' => Str::random(60), // token unik
             ]);
 
             // log login
             if (Auth::check() && Auth::user()->role === 'teacher') {
-                $this->logActivity(Auth::id(), 'login', 'User melakukan login');
+                $this->logActivity(Auth::id(), 'login', "{$user->name} Masuk ke aplikasi");
             }
 
-            return redirect()->route('dashboard')->with('success', 'Login berhasil!');
+            return redirect()->route('dashboard')->with('success', "{$user->name} Login berhasil!");
         }
 
         return back()->withErrors([
@@ -147,13 +153,13 @@ class AuthController extends Controller
         }
 
         if (Auth::check() && Auth::user()->role === 'teacher') {
-            $this->logActivity(Auth::id(), 'logout', 'User melakukan logout');
+            $this->logActivity(Auth::id(), 'logout', "{$user->name} Keluar dari aplikasi");
         }
 
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('message', 'Anda telah berhasil logout.');
+        return redirect()->route('login')->with('message', "{$user->name} Anda telah berhasil logout.");
     }
 }

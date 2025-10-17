@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Middleware\AutoLogout;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\UpdateLastSeen;
+use App\Http\Middleware\TeacherActivityLogger;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -11,12 +15,28 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+    // Tambahkan middleware global (aktif untuk semua route)
+    $middleware->append([
+        AutoLogout::class,
+        UpdateLastSeen::class,
+        TeacherActivityLogger::class,
+    ]);
+
     $middleware->web([
-        \App\Http\Middleware\AutoLogout::class,
-        \App\Http\Middleware\TeacherActivityLogger::class,
-        \Illuminate\Session\Middleware\StartSession::class,
+        AutoLogout::class,
+        TeacherActivityLogger::class,
+        UpdateLastSeen::class,
+        StartSession::class,
+    ]);
+
+    // Tambahkan alias agar bisa dipanggil di route jika perlu
+    $middleware->alias([
+        'auto.logout'   => AutoLogout::class,
+        'update.lastseen' => UpdateLastSeen::class,
+        'teacher.log'   => TeacherActivityLogger::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            @foreach ($surats as $index => $s)
+                            @foreach ($student->surats as $index => $s)
                                 <tr class="text-center hover:bg-gray-50 transition">
                                     <td class="border px-2 py-2">
                                         <input type="hidden" name="surat[{{ $index }}][id]"
@@ -56,7 +56,7 @@
                                         {{ $s->surat_ke }}
                                     </td>
                                     <td class="border px-2 py-2 whitespace-nowrap">{{ $s->nama_surat }}</td>
-                                    <td class="border px-2 py-2">{{ $s->ayat }}</td>
+                                    <td class="border px-2 py-2">{{ (string) $s->ayat }}</td>
                                     <td class="border px-2 py-2">
                                         <input type="number" name="surat[{{ $index }}][kelancaran]"
                                             value="{{ old('surat.' . $index . '.kelancaran', $s->kelancaran) }}"

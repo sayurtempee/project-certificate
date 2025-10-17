@@ -1,63 +1,59 @@
 <div class="w-52 bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 text-white flex flex-col min-h-screen">
     <div class="p-4 text-lg font-bold flex items-center justify-center">
-        <img src="{{ asset('img/logo_white.png') }}" alt="" class="max-w-[140px]">
+        <a href="{{ route('dashboard') }}">
+            <img src="{{ asset('img/logo_white.png') }}" alt="" class="max-w-[140px]">
+        </a>
     </div>
 
     <nav class="flex-1 px-3 space-y-2 text-sm font-medium">
         @auth
             @if (Auth::user()->role == 'admin')
                 <a href="{{ route('teacher.index') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('teacher.*')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200' }}">
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('teacher.*') ? 'bg-blue-600 text-yellow-300' : 'hover:bg-blue-700 hover:text-yellow-200' }}">
                     <i class="bi bi-people-fill text-lg"></i>
                     <span>Kelola Data Guru</span>
                 </a>
 
                 <a href="{{ route('student.index') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('student.*')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200 scale-[1.02]' }}">
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('student.*') ? 'bg-blue-600 text-yellow-300' : 'hover:bg-blue-700 hover:text-yellow-200' }}">
                     <i class="bi bi-mortarboard-fill text-lg"></i>
                     <span>Daftar Murid</span>
                 </a>
 
                 <a href="{{ route('activity.logs.index') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('history.*')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200 scale-[1.02]' }}">
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('activity.*') ? 'bg-blue-600 text-yellow-300' : 'hover:bg-blue-700 hover:text-yellow-200' }}">
                     <i class="bi bi-clock-history text-lg"></i>
                     <span>History</span>
                 </a>
             @elseif (Auth::user()->role == 'teacher')
                 <a href="{{ route('student.index') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('student.index')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200 scale-[1.02]' }}">
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('student.index')
+                           ? 'bg-blue-600 text-yellow-300'
+                           : 'hover:bg-blue-700 hover:text-yellow-200' }}">
                     <i class="bi bi-mortarboard-fill text-lg"></i>
                     <span>Daftar Murid</span>
                 </a>
 
                 <a href="{{ route('student.create') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('student.create')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200 scale-[1.02]' }}">
-                    <i class="bi bi-plus-square-fill text-lg"></i>
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('student.create')
+                           ? 'bg-blue-600 text-yellow-300'
+                           : 'hover:bg-blue-700 hover:text-yellow-200' }}">
+                    <i class="bi bi-plus-circle-dotted"></i>
                     <span>Tambah Sertifikat</span>
                 </a>
 
                 <a href="{{ route('certificates.index') }}"
-                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-all duration-200
-                        {{ request()->routeIs('certificates.*')
-                            ? 'bg-blue-600 text-yellow-300 shadow-md'
-                            : 'hover:bg-blue-700 hover:text-yellow-200 scale-[1.02]' }}">
-                    <i class="bi bi-card-image text-lg"></i>
-                    <span>Sertifikat Image</span>
+                    class="flex items-center gap-2 w-full py-2.5 px-3 rounded-lg transition-colors duration-200 box-border
+                       {{ request()->routeIs('certificates.*')
+                           ? 'bg-blue-600 text-yellow-300'
+                           : 'hover:bg-blue-700 hover:text-yellow-200' }}">
+                    <i class="bi bi-award"></i>
+                    <span>Download Sertifikat Murid</span>
                 </a>
             @endif
         @endauth

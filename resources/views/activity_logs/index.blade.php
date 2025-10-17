@@ -35,14 +35,14 @@
                 </button>
 
                 <!-- Download PDF -->
-                <a href="{{ route('activity.logs.pdf') }}"
+                <a href="{{ route('activity.logs.pdf') }}" onclick="return confirmdownloadPdfHistory(this)"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
                     <i class="bi bi-download"></i> Download PDF
                 </a>
 
                 <!-- Hapus Semua -->
                 <form action="{{ route('activity.logs.clear') }}" method="POST"
-                    onsubmit="return confirm('Yakin ingin menghapus semua activity logs?')">
+                    onsubmit="return confirmDeleteHistory(this)">
                     @csrf
                     @method('DELETE')
                     <button type="submit"

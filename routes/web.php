@@ -42,7 +42,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])
     ->name('password.update');
 
 // Dashboard & fitur untuk semua role
-Route::middleware(['auth', UpdateLastSeen::class, 'throttle:60,1'])->group(function () {
+Route::middleware(['auth', UpdateLastSeen::class, 'teacher.log', 'throttle:60,1'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -22,6 +22,9 @@
                 </div>
             @endif
 
+            {{--  SweetAlert2  --}}
+            @include('layouts.partials.swal')
+
             {{-- Form --}}
             <form action="{{ route('login') }}" method="POST" class="space-y-4">
                 @csrf
