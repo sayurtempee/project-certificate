@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\User;
+use App\Models\ActivityLog;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -69,8 +70,9 @@ class AuthController extends Controller
 
     public function resetPassword(Request $request)
     {
-        $request->validate([
-            'token' => 'required',
+        $request->validate(
+            [
+                'token' => 'required',
                 'email' => 'required|string|email',
                 'password' => 'required|string|confirmed|min:6',
             ],

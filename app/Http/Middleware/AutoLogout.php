@@ -20,10 +20,15 @@ class AutoLogout
     {
         if (Auth::check()) {
             $lastActivity = Session::get('lastActivityTime');
-            $now = Carbon::now();
+            $now = now();
+            $user = Auth::user();
 
             if ($lastActivity && $now->diffInMinutes($lastActivity) >= 60) {
-                return app(\App\Http\Controllers\AuthController::class)->logout($request);
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('login')->with('message', "{$user->name} telah otomatis logout, karena tidak aktif selama 60 menit.");
             }
 
             // update waktu terakhir aktif
