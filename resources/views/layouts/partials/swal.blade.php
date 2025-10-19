@@ -147,6 +147,27 @@
         return false;
     }
 
+    function confirmCreate(form) {
+        event.preventDefault(); // cegah submit default
+
+        Swal.fire({
+            title: 'Konfirmasi Create',
+            text: "Yakin ingin menambahkan data guru ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, tambah!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // submit form jika dikonfirmasi
+            }
+        });
+
+        return false;
+    }
+
     // ====== GLOBAL CONFIRM HELPER ======
     // Pakai di tombol/anchor dengan attribute data-confirm, contoh:
     // <button data-confirm="Hapus data ini?" data-confirm-yes="submit:#deleteForm1">Hapus</button>

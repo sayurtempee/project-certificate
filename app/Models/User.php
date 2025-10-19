@@ -81,4 +81,9 @@ class User extends Authenticatable
 
         return $initials;
     }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
 }

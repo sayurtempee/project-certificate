@@ -11,23 +11,27 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Total siswa
-        $studentsCount = Student::count();
+        $user = Auth::user();
 
-        // Total sertifikat (hitung siswa yang punya entri surat)
-        $certificatesCount = Student::has('surats')->count();
+        if ($user->role === 'teacher') {
+            // Hanya siswa milik teacher
+            $studentsCount = $user->students()->count();
+            $certificatesCount = $user->students()->has('surats')->count();
+        } else {
+            // Admin atau role lain: hitung semua
+            $studentsCount = Student::count();
+            $certificatesCount = Student::has('surats')->count();
+        }
 
-        // Ambil data guru (kirim koleksi ke view untuk status online/offline)
+        // Data guru tetap sama
         $teachers = User::where('role', 'teacher')
             ->get(['id', 'name', 'email', 'is_online', 'last_seen']);
 
-        // Jumlah guru (supaya kompatibel dengan nama variabel yang mungkin dipakai di view)
         $teachersCount = $teachers->count();
-        // juga sediakan teacherCount jika view lain memakai nama itu
         $teacherCount = $teachersCount;
 
         return view('dashboard', [
-            'user' => Auth::user(),
+            'user' => $user,
             'studentsCount' => $studentsCount,
             'certificatesCount' => $certificatesCount,
             'teacherCount' => $teacherCount,

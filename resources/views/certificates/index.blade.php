@@ -193,7 +193,7 @@
                     <h4 class="text-xl sm:text-2xl font-bold text-slate-800">Belum Ada Data Siswa</h4>
                     <p class="text-slate-600 max-w-md">Tidak ada data siswa untuk sertifikat saat ini. Tambahkan data siswa
                         terlebih dahulu untuk mulai membuat sertifikat.</p>
-                    <a href="{{ route('students.index') }}"
+                    <a href="{{ route('student.index') }}"
                         class="inline-flex items-center px-5 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
                         <i class="bi bi-plus-circle mr-2"></i> Tambah Siswa
                     </a>

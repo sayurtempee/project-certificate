@@ -134,6 +134,7 @@ class StudentController extends Controller
         DB::transaction(function () use ($validated, $penyimak) {
             // simpan murid
             $student = Student::create([
+                'user_id'      => Auth::id(),
                 'nama'          => $validated['nama'],
                 'no_induk'      => $validated['no_induk'],
                 'penyimak'      => $penyimak,
@@ -242,6 +243,7 @@ class StudentController extends Controller
             }
 
             $student->update([
+                'user_id'        => Auth::id(),
                 'nama'       => $validated['nama'],
                 'no_induk'   => trim($validated['no_induk']),
                 'juz'        => (int)$validated['juz'],
@@ -336,6 +338,7 @@ class StudentController extends Controller
                         'juz'           => max(0, min(30, $juz)),
                         'penyimak'      => $penyimak,
                         'tahun_ajaran'  => now()->year,
+                        'user_id'      => Auth::id(),
                     ]
                 );
 

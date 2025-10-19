@@ -16,12 +16,19 @@ class Student extends Model
         'tempat_kelulusan',
         'nm_kepsek',
         'nip_kepsek',
+        'user_id',
     ];
 
     // Relasi ke nilai per surat
     public function surats()
     {
         return $this->hasMany(StudentSurat::class, 'student_id');
+    }
+
+    // Relasi ke user
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected $casts = [

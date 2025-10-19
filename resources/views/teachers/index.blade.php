@@ -110,7 +110,7 @@
                 class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
 
                 <h3 class="text-xl font-bold mb-4">Tambah Guru</h3>
-                <form action="{{ route('teacher.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form action="{{ route('teacher.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" onsubmit="return confirmCreate(this)">
                     @csrf
                     <div>
                         <label class="block font-semibold">Nama</label>

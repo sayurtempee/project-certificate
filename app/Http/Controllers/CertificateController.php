@@ -12,31 +12,39 @@ class CertificateController extends Controller
 {
     public function index()
     {
-        if (!Auth::check() && Auth::user()->role === 'teacher') {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized action.');
         }
 
-        $students = Student::all();
+        // Ambil hanya siswa milik teacher yang login
+        $students = $user->students()->with('surats')->orderBy('nama')->get();
+
         return view('certificates.index', compact('students'));
     }
 
     public function showCertificate($id)
     {
-        if (!(Auth::check() && Auth::user()->role === 'teacher')) {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
-        $student = Student::with('surats')->findOrFail($id);
+        // Pastikan siswa milik teacher
+        $student = $user->students()->with('surats')->findOrFail($id);
+
         return view('certificates.show', compact('student'));
     }
 
     public function downloadCertificate($id)
     {
-        if (!(Auth::check() && Auth::user()->role === 'teacher')) {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
-        $student = Student::with('surats')->findOrFail($id);
+        $student = $user->students()->with('surats')->findOrFail($id);
 
         $pdf = Pdf::loadView('certificates.template', compact('student'), [
             'student' => $student,
@@ -51,29 +59,25 @@ class CertificateController extends Controller
 
     public function updateTanggalLulus(Request $request, $id)
     {
-        // Cek role teacher
-        if (!(Auth::check() && Auth::user()->role === 'teacher')) {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
-        // Validasi input
-        $request->validate([
-            'tanggal_lulus' => 'nullable|date',
-        ]);
+        $request->validate(['tanggal_lulus' => 'nullable|date']);
 
-        $student = Student::findOrFail($id);
+        $student = $user->students()->findOrFail($id);
 
-        // Simpan ke database
-        $tanggalLulus = $request->input('tanggal_lulus');
-        $student->tanggal_lulus = $tanggalLulus ? Carbon::parse($tanggalLulus) : null;
+        $student->tanggal_lulus = $request->input('tanggal_lulus') ? Carbon::parse($request->input('tanggal_lulus')) : null;
         $student->save();
 
         return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan Tanggal Kelulusan.');
     }
 
-    public function updateTempatKelulusan(Request $request, $id_)
+    public function updateTempatKelulusan(Request $request, $id)
     {
-        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
@@ -81,19 +85,18 @@ class CertificateController extends Controller
             'tempat_kelulusan' => 'nullable|string|max:255'
         ]);
 
-        $student = Student::findOrFail($id_);
+        $student = $user->students()->findOrFail($id);
 
-        // jika kosong, default Jakarta
-        $student->tempat_kelulusan = $validateData['tempat_kelulusan']  ?: null;
+        $student->tempat_kelulusan = $validateData['tempat_kelulusan'] ?: null;
         $student->save();
 
-        return redirect()->route('certificates.index')
-            ->with('success', 'Berhasil Menambahkan Tempat Kelulusan.');
+        return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan Tempat Kelulusan.');
     }
 
-    public function updateNamaKepsek(Request $request, $id__)
+    public function updateNamaKepsek(Request $request, $id)
     {
-        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
@@ -101,37 +104,27 @@ class CertificateController extends Controller
             'nm_kepsek' => 'nullable|string|max:255'
         ]);
 
-        $student = Student::findOrFail($id__);
+        $student = $user->students()->findOrFail($id);
+
         $nipMapping = [
             'Neor Imanah, M.Pd' => '1234567890',
             'Euis Rahmawaty, M.Pd' => '7890123456'
         ];
 
-        $errorMessage = null;
         if (isset($nipMapping[$validateData['nm_kepsek']])) {
-            $expectedNip = $nipMapping[$validateData['nm_kepsek']];
-            if ($student->nip_kepsek && $student->nip_kepsek !== $expectedNip) {
-                $errorMessage = "NIP untuk {$validateData['nm_kepsek']} harus {$expectedNip}";
-            }
-
-            $student->nip_kepsek = $expectedNip;
+            $student->nip_kepsek = $nipMapping[$validateData['nm_kepsek']];
         }
 
-        $student->nm_kepsek = $validateData["nm_kepsek"] ?: null;
-        $student->save();
-
-        if ($errorMessage) {
-            return redirect()->back()->withInput()->with("error", $errorMessage);
-        }
-        $student->nm_kepsek = $validateData['nm_kepsek'] ?: null;;
+        $student->nm_kepsek = $validateData['nm_kepsek'] ?: null;
         $student->save();
 
         return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan Nama Kepala Sekolah');
     }
 
-    public function updateNipKepsek(Request $request, $nip_id)
+    public function updateNipKepsek(Request $request, $id)
     {
-        if (!Auth::check() || Auth::user()->role !== 'teacher') {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'teacher') {
             abort(403, 'Unauthorized');
         }
 
@@ -139,17 +132,10 @@ class CertificateController extends Controller
             'nip_kepsek' => 'nullable|string|max:255'
         ]);
 
-        $student = Student::findOrFail($nip_id);
-        try {
-            $student->nip_kepsek = $validateData['nip_kepsek'] ?: null;
-            $student->save();
+        $student = $user->students()->findOrFail($id);
+        $student->nip_kepsek = $validateData['nip_kepsek'] ?: null;
+        $student->save();
 
-            return redirect()->route('certificates.index')
-                ->with('success', 'Berhasil Menambahkan atau Memperbarui NIP Kepala Sekolah');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', $e->getMessage());
-        }
+        return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan atau Memperbarui NIP Kepala Sekolah');
     }
 }

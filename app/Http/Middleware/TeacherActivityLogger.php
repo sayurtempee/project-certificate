@@ -20,29 +20,31 @@ class TeacherActivityLogger
         $response = $next($request);
 
         if (Auth::check() && Auth::user()->role === 'teacher') {
+            $user = Auth::user();
             $routeName = $request->route()?->getName();
             if ($routeName) {
                 $description = match ($routeName) {
-                    'student.create'  => 'Membuka halaman tambah murid',
-                    'student.store'   => 'Menambahkan murid baru',
-                    'student.update'  => 'Mengupdate data murid',
-                    'student.destroy' => 'Menghapus data murid',
-                    'student.index'   => 'Melihat daftar murid',
-                    'login'           => 'Membuka halaman login',
-                    'login.process'   => 'User melakukan login',
-                    'logout'          => 'User melakukan logout',
-                    'dashboard'       => 'Melihat isi dashboard',
-                    'student.show'    => 'Melihat detail murid',
-                    'student.updateInline' => 'Mengupdate data murid secara inline',
-                    'student.pdf'     => 'Mendownload PDF laporan murid',
-                    'certificates.index'   => 'Melihat daftar sertifikat murid',
-                    'certificates.showCertificate'     => 'Melihat detail sertifikat murid',
-                    'certificates.downloadCertificate' => 'Mendownload sertifikat murid',
-                    'certificates.updateNamaKepsek'    => 'Mengupdate Nama Kepala Sekolah',
-                    'certificates.updateNipKepsek'     => 'Mengupdate NIP Kepala Sekolah',
-                    'certificates.updateTempatKelulusan' => 'Menetapkan Tempat Kelulusan',
-                    'certificates.updateTanggalLulus' => 'Meneteapkan Tanggal Kelulusan',
-                    default           => 'Mengakses halaman {$routeName}',
+                    'student.create'  => "{$user->name} Membuka halaman tambah murid",
+                    'student.store'   => "{$user->name} Menambahkan murid baru",
+                    "students.import" => "{$user->name} Mengimpor data murid",
+                    'student.update'  => "{$user->name} Mengupdate data murid",
+                    'student.destroy' => "{$user->name} Menghapus data murid",
+                    'student.index'   => "{$user->name} Melihat daftar murid",
+                    'login'           => "{$user->name} Membuka halaman login",
+                    'login.process'   => "{$user->name} melakukan login",
+                    'logout'          => "{$user->name} melakukan logout",
+                    'dashboard'       => "{$user->name} Melihat isi dashboard",
+                    'student.show'    => "{$user->name} Melihat detail murid",
+                    'student.updateInline' => "{$user->name} Mengupdate data murid secara inline",
+                    'student.pdf'     => "{$user->name} Mendownload PDF laporan murid",
+                    'certificates.index'   => "{$user->name} Melihat daftar sertifikat murid",
+                    'certificates.showCertificate'     => "{$user->name} Melihat detail sertifikat murid",
+                    'certificates.downloadCertificate' => "{$user->name} Mendownload sertifikat murid",
+                    'certificates.updateNamaKepsek'    => "{$user->name} Mengupdate Nama Kepala Sekolah",
+                    'certificates.updateNipKepsek'     => "{$user->name} Mengupdate NIP Kepala Sekolah",
+                    'certificates.updateTempatKelulusan' => "{$user->name} Menetapkan Tempat Kelulusan",
+                    'certificates.updateTanggalLulus' => "{$user->name} Menetapkan Tanggal Kelulusan",
+                    default           => "{$user->name} Mengakses halaman {$routeName}",
                 };
             }
             ActivityLog::create([

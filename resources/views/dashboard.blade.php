@@ -5,7 +5,7 @@
 @section('dashboard-content')
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-blue-800 to-blue-600 text-white rounded-xl p-6 mb-6 shadow-md">
-        <h1 class="text-3xl font-bold mb-2">Selamat Datang di Dashboard</h1>
+        <h1 class="text-3xl font-bold mb-2">{{ $user->name }} Selamat Datang di Dashboard</h1>
         <p class="text-lg">
             Hai, <span class="font-semibold">{{ $user->name }}</span>! Selamat mengelola sertifikat Tahfidz SDIA 13
             Rawamangun.
