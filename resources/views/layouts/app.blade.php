@@ -72,7 +72,7 @@
             if (idleTime >= maxIdle) {
                 document.getElementById('autoLogoutForm').submit();
             }
-        }, 30000); // cek tiap 30 detik
+        }, 60000); // cek tiap 60 detik
     </script>
 
     <form id="autoLogoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
