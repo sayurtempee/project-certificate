@@ -46,12 +46,8 @@ class CertificateController extends Controller
 
         $student = $user->students()->with('surats')->findOrFail($id);
 
-        $pdf = Pdf::loadView('certificates.template', compact('student'), [
+        $pdf = Pdf::loadView('certificates.template', [
             'student' => $student,
-            'certificate' => [
-                'nama_kepala_sekolah' => 'Neor Imanah, M.Pd',
-                'nip' => '1234567890'
-            ]
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('sertifikat-murid-' . $student->nama . '.pdf');
