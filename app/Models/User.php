@@ -55,31 +55,44 @@ class User extends Authenticatable
         'last_seen' => 'datetime',
     ];
 
-    public function get_gravatar_url()
+    public function get_gravatar_url(int $size = 200, string $default = 'mp', string $rating = 'g'): string
     {
-        // Trim leading and trailing whitespace from
-        // an email address and force all characters
-        // to lower case
-        $address = strtolower(trim($this->email));
+        $email = $this->email ?? '';
+        $email = trim(strtolower($email));
 
-        // Create an SHA256 hash of the final string
-        $hash = hash('sha256', $address);
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $hash = str_repeat('0', 64);
+        } else {
+            $hash = hash('sha256', $email);
+        }
 
-        // Grab the actual image URL
-        return 'https://gravatar.com/avatar/' . $hash;
+        return sprintf(
+            'https://gravatar.com/avatar/%s?s=%d&d=%s&r=%s',
+            $hash,
+            $size,
+            urlencode($default),
+            $rating
+        );
     }
 
     public function getInitials(): string
     {
-        $words = explode(' ', $this->name);
-        $initials = '';
-
-        foreach ($words as $word) {
-            $initials .= strtoupper(mb_substr($word, 0, 1));
-            if (strlen($initials) === 2) break;
+        $name = trim($this->name);
+        if ($name === '') {
+            return 'NA'; // Fallback jika nama kosong
         }
 
-        return $initials;
+        $words = preg_split('/\s+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+
+        if (count($words) === 1) {
+            return strtoupper(mb_substr($words[0], 0, 2)); // Ambil 2 huruf pertama jika hanya satu kata
+        }
+
+        // Ambil huruf pertama dari kata pertama dan terakhir
+        $firstInitial = mb_substr($words[0], 0, 1);
+        $lastInitial = mb_substr(end($words), 0, 1);
+
+        return strtoupper($firstInitial . $lastInitial);
     }
 
     public function students()

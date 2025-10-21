@@ -57,9 +57,9 @@
         <table class="w-full border border-gray-300">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="border p-2">User</th>
-                    <th class="border p-2">Action</th>
-                    <th class="border p-2">Description</th>
+                    <th class="border p-2">Guru</th>
+                    <th class="border p-2">Mengarah ke route</th>
+                    <th class="border p-2">Yang dilakukan di route tersebut</th>
                     <th class="border p-2">Waktu</th>
                 </tr>
             </thead>
