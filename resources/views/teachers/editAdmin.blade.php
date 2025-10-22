@@ -40,7 +40,8 @@
 
                 {{-- Nama --}}
                 <div>
-                    <label for="name" class="block font-medium mb-1">Nama</label>
+                    <label for="name" class="block font-medium mb-1">Nama <span
+                            class="text-sm text-red-500 italix">(nama tidak bisa di ubah)</span></label>
                     <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}" disabled
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
@@ -55,7 +56,7 @@
                 {{-- Password --}}
                 <div>
                     <label for="password" class="block font-medium mb-1">Password Baru
-                        <span class="text-sm text-gray-500">(kosongkan jika tidak diubah)</span>
+                        <span class="text-sm text-black-500">(kosongkan jika tidak diubah)</span>
                     </label>
                     <input type="password" name="password" id="password"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -63,7 +64,9 @@
 
                 {{-- Konfirmasi Password --}}
                 <div>
-                    <label for="password_confirmation" class="block font-medium mb-1">Konfirmasi Password</label>
+                    <label for="password_confirmation" class="block font-medium mb-1">Konfirmasi Password
+                        <span class="text-sm text-black-500">(kosongkan jika tidak diubah)</span>
+                    </label>
                     <input type="password" name="password_confirmation" id="password_confirmation"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
@@ -93,8 +96,7 @@
                 <div x-data="{ open: false }" x-on:open-cropper.window="open = true">
                     <!-- Overlay -->
                     <div x-show="open"
-                        class="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50"
-                        x-cloak>
+                        class="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50" x-cloak>
 
                         <!-- Modal -->
                         <div class="bg-white p-5 rounded-lg shadow-lg max-w-lg w-full">
