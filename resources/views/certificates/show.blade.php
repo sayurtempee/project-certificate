@@ -20,29 +20,29 @@
             <div class="absolute inset-0 text-black px-12 py-16 flex flex-col justify-between">
 
                 <!-- Bagian tengah (judul + nama + nilai) -->
-                <div class="text-center mt-10">
-                    <h1 class="text-4xl font-bold mt-10">SERTIFIKAT</h1>
-                    <p class="text-xl mb-1">Diberikan kepada</p>
-                    <h2 class="text-4xl font-bold mb-1 underline">{{ $student->nama }}</h2>
-                    <p class="text-2xl mb-1 font-semibold">No. Induk: {{ $student->no_induk }}</p>
-                    <p class="text-2xl mb-1">Telah menyelesaikan penyimakan <span class="font-semibold underline">Juz {{ $student->juz }}</span></p>
+                <div class="text-center mt-6">
+                    <h1 class="text-2xl font-bold mt-4">SERTIFIKAT</h1>
+                    <p class="text-lg mb-1">Diberikan kepada</p>
+                    <h2 class="text-2xl font-bold mb-1 underline">{{ $student->nama }}</h2>
+                    <p class="text-xl mb-1 font-semibold">No. Induk: {{ $student->no_induk }}</p>
+                    <p class="text-xl mb-1">Telah menyelesaikan penyimakan <span class="font-semibold underline">Juz {{ $student->juz }}</span></p>
 
                     @php
                         $nilai = $student->surats->avg('nilai');
                     @endphp
-                    <p class="text-2xl font-bold mt-3">
+                    <p class="text-xl font-bold mt-3">
                         Nilai Akhir: <span class="font-semibold underline">{{ $nilai ? number_format($nilai, 0) : '-' }}</span>
                     </p>
                 </div>
 
                 <!-- Bagian tanda tangan -->
-                <div class="text-center mt-20">
-                    <span class="text-2xl">{{ $student['tempat_kelulusan'] ?? 'Tempat Belum Ditetapkan' }}, {{ $student->tanggal_lulus?->translatedFormat('d-M-Y') ?? 'Tanggal Belum Ditetapkan' }}</span>
+                <div class="text-center mt-8">
+                    <span class="text-xl">{{ $student['tempat_kelulusan'] ?? 'Tempat Belum Ditetapkan' }}, {{ $student->tanggal_lulus?->translatedFormat('d-M-Y') ?? 'Tanggal Belum Ditetapkan' }}</span>
                     <br>
-                    <span class="text-2xl">Kepala Sekolah</span>
-                    <div class="mt-24">
-                        <strong class="block font-semibold text-2xl">{{ $student->nm_kepsek ?? 'Nama Belum Ditetapkan' }}</strong>
-                        <span class="block text-2xl">NIP: {{ $student->nip_kepsek ?? 'NIP Belum Ditetapkan' }}</span>
+                    <span class="text-xl">Kepala Sekolah</span>
+                    <div class="mt-18">
+                        <strong class="block font-semibold text-xl">{{ $student->nm_kepsek ?? 'Nama Belum Ditetapkan' }}</strong>
+                        <span class="block text-xl">NIP: {{ $student->nip_kepsek ?? 'NIP Belum Ditetapkan' }}</span>
                     </div>
                 </div>
             </div>

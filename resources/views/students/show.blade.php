@@ -59,7 +59,7 @@
                                     <td class="border px-2 py-2">{{ (string) $s->ayat }}</td>
                                     <td class="border px-2 py-2">
                                         <input type="number" name="surat[{{ $index }}][kelancaran]"
-                                            value="{{ old('surat.' . $index . '.kelancaran', $s->kelancaran) }}"
+                                            value="{{ old('surat.' . $index . '.kelancaran', default: $s->kelancaran) }}"
                                             class="w-14 sm:w-16 border rounded text-center text-xs sm:text-sm focus:ring-1 focus:ring-blue-500"
                                             min="0" max="33" oninput="hitungNilai({{ $index }})"
                                             required>
