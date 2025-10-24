@@ -40,15 +40,18 @@
 
                 {{-- Nama --}}
                 <div>
-                    <label for="name" class="block font-medium mb-1">Nama <span
-                            class="text-sm text-red-500 italix">(nama tidak bisa di ubah)</span></label>
+                    <label for="name" class="block font-medium mb-1">Nama
+                        <span class="text-sm text-red-500 italic">(nama tidak bisa di ubah)</span>
+                    </label>
                     <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}" disabled
-                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 selection:text-red-500">
                 </div>
 
                 {{-- Email --}}
                 <div>
-                    <label for="email" class="block font-medium mb-1">Email</label>
+                    <label for="email" class="block font-medium mb-1">Email
+                        <span class="text-sm text-black-500 italic">(email bisa di ubah opsional)</span>
+                    </label>
                     <input type="email" name="email" id="email" value="{{ old('email', $admin->email) }}"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
@@ -56,7 +59,7 @@
                 {{-- Password --}}
                 <div>
                     <label for="password" class="block font-medium mb-1">Password Baru
-                        <span class="text-sm text-black-500">(kosongkan jika tidak diubah)</span>
+                        <span class="text-sm text-black-500 italic">(kosongkan jika tidak diubah)</span>
                     </label>
                     <input type="password" name="password" id="password"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -65,7 +68,7 @@
                 {{-- Konfirmasi Password --}}
                 <div>
                     <label for="password_confirmation" class="block font-medium mb-1">Konfirmasi Password
-                        <span class="text-sm text-black-500">(kosongkan jika tidak diubah)</span>
+                        <span class="text-sm text-black-500 italic">(kosongkan jika tidak diubah)</span>
                     </label>
                     <input type="password" name="password_confirmation" id="password_confirmation"
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -73,7 +76,9 @@
 
                 {{-- Foto --}}
                 <div>
-                    <label for="photo" class="block font-medium mb-1">Foto Profile</label>
+                    <label for="photo" class="block font-medium mb-1">Foto Profile
+                        <span class="text-sm text-gre5-500 italic">(foto bisa di ubah opsional)</span>
+                    </label>
                     <input type="file" name="photo" id="photo" class="w-full text-sm">
 
                     {{-- Hidden input untuk hasil crop --}}
@@ -90,6 +95,7 @@
                                 class="w-20 h-20 rounded-full shadow">
                         </div>
                     @endif
+                    <p class="text-sm font-semibold text-black-500 text-center mt-2">{{ old('name', $admin->name) }}</p>
                 </div>
 
                 {{-- Modal Cropper --}}

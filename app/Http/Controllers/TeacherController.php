@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Student;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -139,6 +141,134 @@ class TeacherController extends Controller
     }
 
     /**
+     * Import CSV sederhana: kolom [nama,no_induk,juz]
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $rows = file($file->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        if (!$rows) {
+            return back()->with('error', 'File kosong atau tidak bisa dibaca.');
+        }
+
+        // Hilangkan BOM (Byte Order Mark)
+        $rows[0] = preg_replace('/^\xEF\xBB\xBF/', '', $rows[0]);
+        $csvData = array_map('str_getcsv', $rows);
+
+        // Hapus header jika ada
+        $first = array_map('strtolower', array_map('trim', $csvData[0] ?? []));
+        if (in_array('nama', $first) && in_array('no_induk', $first)) {
+            array_shift($csvData);
+        }
+
+        $normalize = fn($text) => strtolower(str_replace(['-', ' '], '', $text));
+        $juzData = $this->getJuzDataInternal();
+        $currentUser = Auth::user();
+
+        $skipped = [];
+        $success = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($csvData as $index => $row) {
+                $nama        = trim($row[0] ?? '');
+                $noInduk     = trim($row[1] ?? '');
+                $juz         = isset($row[2]) && is_numeric($row[2]) ? (int)$row[2] : 0;
+                $namaSurat   = trim($row[3] ?? '');
+                $kelancaran  = isset($row[4]) && is_numeric($row[4]) ? (int)$row[4] : 0;
+                $fasohah     = isset($row[5]) && is_numeric($row[5]) ? (int)$row[5] : 0;
+                $tajwid      = isset($row[6]) && is_numeric($row[6]) ? (int)$row[6] : 0;
+
+                // Skip jika data penting kosong
+                if ($nama === '' || $noInduk === '' || $namaSurat === '' || $juz <= 0) {
+                    $skipped[] = "Baris #$index: data tidak lengkap";
+                    continue;
+                }
+
+                $oldStudent = Student::where('no_induk', $noInduk)->first();
+
+                // Skip jika student sudah dimiliki guru lain
+                if ($oldStudent && $oldStudent->user_id !== $currentUser->id) {
+                    $skipped[] = "Baris #$index: $nama ($noInduk) sudah dimiliki guru lain";
+                    continue;
+                }
+
+                $penyimak = $oldStudent->penyimak ?? ($currentUser->role === 'teacher' ? $currentUser->name : null);
+
+                // Simpan / update student
+                $student = Student::updateOrCreate(
+                    ['no_induk' => $noInduk],
+                    [
+                        'nama'         => $nama,
+                        'juz'          => max(0, min(30, $juz)),
+                        'penyimak'     => $penyimak,
+                        'tahun_ajaran' => now()->year,
+                        'user_id'      => $currentUser->id,
+                    ]
+                );
+
+                // Pastikan JUZ valid
+                if (!isset($juzData[$juz])) {
+                    $skipped[] = "Baris #$index: Juz $juz tidak ditemukan dalam konfigurasi";
+                    continue;
+                }
+
+                // Cari surat dalam daftar Juz
+                $suratConfig = collect($juzData[$juz])->first(function ($item) use ($normalize, $namaSurat) {
+                    return $normalize($item['nama_surat']) === $normalize($namaSurat);
+                });
+
+                if (!$suratConfig) {
+                    $skipped[] = "Baris #$index: Surat '$namaSurat' tidak valid untuk Juz $juz";
+                    continue;
+                }
+
+                $total = $kelancaran + $fasohah + $tajwid;
+                $bobot = $this->getBobotByJuz($juz);
+                $nilai = max(0, 100 - ($total * $bobot));
+                $predikat = $this->getPredikat($nilai);
+
+                $student->surats()->updateOrCreate(
+                    [
+                        'student_id' => $student->id,
+                        'surat_ke'   => $suratConfig['surat_ke'],
+                    ],
+                    [
+                        'nama_surat'      => $suratConfig['nama_surat'],
+                        'ayat'            => $suratConfig['ayat'],
+                        'kelancaran'      => $kelancaran,
+                        'fasohah'         => $fasohah,
+                        'tajwid'          => $tajwid,
+                        'total_kesalahan' => $total,
+                        'nilai'           => $nilai,
+                        'predikat'        => $predikat,
+                    ]
+                );
+
+                $success++;
+            }
+
+            DB::commit();
+
+            $message = "CSV berhasil diimpor! ($success baris sukses)";
+            if (count($skipped) > 0) {
+                $message .= " — " . count($skipped) . " baris dilewati.";
+            }
+
+            return redirect()->back()->with('success', $message)->with('skipped', $skipped);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat impor: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $teacher)
@@ -193,5 +323,30 @@ class TeacherController extends Controller
         return $message
             ? redirect($route)->with($sessionKey, $message)
             : redirect($route);
+    }
+
+    // ==========================
+    // Private Helper Functions
+    // ==========================
+    private function getJuzDataInternal()
+    {
+        return config('juz.surat');
+    }
+
+    private function getBobotByJuz(int $juz): float
+    {
+        if ($juz >= 1 && $juz <= 15) return 1.7;
+        if ($juz >= 16 && $juz <= 30) return 1.9;
+        return 1.7;
+    }
+
+    private function getPredikat($nilai)
+    {
+        if ($nilai >= 96) return 'A+';
+        if ($nilai >= 90) return 'A';
+        if ($nilai >= 86) return 'B+';
+        if ($nilai >= 80) return 'B';
+        if ($nilai >= 74.5) return 'C';
+        return 'D';
     }
 }

@@ -60,7 +60,7 @@ Route::middleware(['auth', UpdateLastSeen::class, 'teacher.log', 'throttle:60,1'
     Route::resource('student', StudentController::class);
     Route::put('student/update-inline/{id}', [StudentController::class, 'updateInline'])->name('student.updateInline');
     Route::get('/students/export-example', [StudentController::class, 'exportSampleCsv'])->name('students.exportSampleCsv');
-    Route::post('/students/import', [StudentController::class, 'import'])->middleware('throttle:10,1')->name('students.import');
+    Route::post('/students/import', [TeacherController::class, 'import'])->middleware('throttle:10,1')->name('students.import');
     Route::get('/student/{id}/pdf', [StudentController::class, 'generatePdf'])->name('student.pdf');
     Route::get('/rekap/{tahun}/pdf', [StudentController::class, 'rekapTahunanPdf'])->name('students.rekap');
 
