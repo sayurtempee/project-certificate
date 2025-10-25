@@ -22,6 +22,16 @@ class TeacherActivityLogger
         if (Auth::check() && Auth::user()->role === 'teacher') {
             $user = Auth::user();
             $routeName = $request->route()?->getName();
+            $method = $request->method();
+
+            if ($method == 'GET' && !in_array($routeName, [
+                'student.index',
+                'dashboard',
+                'certificates.index'
+            ])) {
+                return $response;
+            }
+
             if ($routeName) {
                 $description = match ($routeName) {
                     'student.create'  => "{$user->name} Membuka halaman tambah murid",
@@ -47,11 +57,20 @@ class TeacherActivityLogger
                     default           => "{$user->name} Mengakses halaman {$routeName}",
                 };
             }
-            ActivityLog::create([
-                'user_id' => Auth::id(),
-                'action' => $routeName,
-                'description' => $description,
-            ]);
+
+            $recent = ActivityLog::where('user_id', $user->id)
+                ->where('action', $routeName)
+                ->where('description', $description)
+                ->where('created_at', '>=', now()->subSeconds(3))
+                ->exists();
+
+            if (!$recent) {
+                ActivityLog::create([
+                    'user_id' => Auth::id(),
+                    'action' => $routeName,
+                    'description' => $description,
+                ]);
+            }
         }
         return $response;
     }
