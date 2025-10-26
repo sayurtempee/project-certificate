@@ -3,13 +3,38 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use setasign\Fpdi\Fpdi;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class CertificateController extends Controller
 {
+    // Helper pembangun surats
+    protected function buildSurats(Student $student)
+    {
+        $juzData = $this->getJuzDataInternal();
+        if (!isset($juzData[$student->juz])) {
+            return collect();
+        }
+
+        return collect($juzData[$student->juz])->map(function ($s) use ($student) {
+            $nilai =  $student->surats->firstWhere('surat_ke', $s['surat_ke']);
+
+            return (object) [
+                'surat_ke' => (int) $s['surat_ke'],
+                'nama_surat' => $s['nama_surat'],
+                'ayat' => (string) $s['ayat'],
+                'nilai' => isset($nilai->nilai) ? (float) $nilai->nilai : 0.0,
+                'predikat' => (string) ($nilai->predikat ?? 'Belum ada predikat'),
+            ];
+        });
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -39,18 +64,38 @@ class CertificateController extends Controller
 
     public function downloadCertificate($id)
     {
-        $user = Auth::user();
-        if (!$user || $user->role !== 'teacher') {
-            abort(403, 'Unauthorized');
+        $student = Auth::user()->students()->with('surats')->findOrFail($id);
+        $surats = $this->buildSurats($student);
+
+        // Render dua halaman ke file sementara
+        $pdfDepanPath = storage_path("app/public/temp-depan.pdf");
+        $pdfBelakangPath = storage_path("app/public/temp-belakang.pdf");
+
+        Pdf::loadView('certificates.template', compact('student', 'surats'))
+            ->setPaper('a4', 'landscape')
+            ->save($pdfDepanPath);
+
+        Pdf::loadView('certificates.template-belakang', compact('student', 'surats'))
+            ->setPaper('a4', 'landscape')
+            ->save($pdfBelakangPath);
+
+        // Gabungkan dengan FPDI
+        $finalPdf = new Fpdi();
+        foreach ([$pdfDepanPath, $pdfBelakangPath] as $path) {
+            $pageCount = $finalPdf->setSourceFile($path);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tpl = $finalPdf->importPage($i);
+                $size = $finalPdf->getTemplateSize($tpl);
+                $finalPdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $finalPdf->useTemplate($tpl);
+            }
         }
 
-        $student = $user->students()->with('surats')->findOrFail($id);
+        // Output hasil
+        $output = storage_path("app/public/sertifikat-{$student->nama}.pdf");
+        $finalPdf->Output($output, 'F');
 
-        $pdf = Pdf::loadView('certificates.template', [
-            'student' => $student,
-        ])->setPaper('a4', 'landscape');
-
-        return $pdf->download('sertifikat-murid-' . $student->nama . '.pdf');
+        return response()->download($output)->deleteFileAfterSend(true);
     }
 
     public function updateTanggalLulus(Request $request, $id)
@@ -133,5 +178,13 @@ class CertificateController extends Controller
         $student->save();
 
         return redirect()->route('certificates.index')->with('success', 'Berhasil Menambahkan atau Memperbarui NIP Kepala Sekolah');
+    }
+
+    // ==========================
+    // Private Helper Functions
+    // ==========================
+    private function getJuzDataInternal()
+    {
+        return config('juz.surat');
     }
 }
