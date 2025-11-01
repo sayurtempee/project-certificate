@@ -357,6 +357,33 @@
         return false;
     }
 
+    {{--  Alert untuk Logout/logo khusus  --}}
+    function confirmLogout(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Keluar Website',
+            text: 'Yakin ingin keluar dari website ini?',
+            icon: 'warning',
+            // gunakan iconHtml supaya logo muncul langsung dari SweetAlert (tanpa imageUrl)
+            iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" aria-hidden="true">
+                <circle cx="12" cy="12" r="12" fill="#ef4444"/>
+                <path d="M10 8v3H2v2h8v3l5-4-5-4z" fill="#ffffff"/>
+            </svg>`,
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', // warna tombol konfirmasi (merah)
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Keluar!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                icon: 'swal2-icon-logout' // opsional bila mau styling tambahan via CSS
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+
     {{--  Alert untuk update data guru  --}}
     document.addEventListener('DOMContentLoaded', function() {
         const saveButtonTeacher = document.getElementById('saveButtonTeacher');

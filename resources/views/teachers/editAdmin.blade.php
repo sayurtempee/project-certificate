@@ -62,7 +62,8 @@
                     <label for="photo" class="block font-medium mb-1">Foto Profile
                         <span class="text-sm text-gre5-500 italic">(foto bisa di ubah opsional)</span>
                     </label>
-                    <input type="file" name="photo" id="photo" class="w-full text-sm">
+                    <input type="file" name="photo" id="photo"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
 
                     {{-- Hidden input untuk hasil crop --}}
                     <input type="hidden" name="cropped_image" id="cropped_image">

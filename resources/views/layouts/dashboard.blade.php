@@ -51,7 +51,7 @@
                                 @endif
 
                                 {{-- Logout untuk semua yang login --}}
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout(this)">
                                     @csrf
                                     <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-100">
                                         Logout
