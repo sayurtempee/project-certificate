@@ -105,18 +105,17 @@
             <div class="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-3">
                 {{-- Upload CSV --}}
                 <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data"
-                    class="flex items-center gap-2 w-full sm:w-auto">
+                    class="flex items-center gap-2 w-full sm:w-auto" id="csvForm">
                     @csrf
-                    <label for="csvFileInput"
+                    <label id="csvUploadLabel"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm rounded-lg shadow cursor-pointer transition flex items-center gap-2 w-full sm:w-auto justify-center">
                         <i class="bi bi-upload"></i> Upload Data Murid (CSV)
                     </label>
-                    <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput" required>
-                    <button type="submit" class="hidden" id="csvSubmitBtn"></button>
+                    <input type="file" name="file" accept=".csv" class="hidden" id="csvFileInput">
                 </form>
 
                 {{-- Export Sample --}}
-                <a href="{{ route('students.exportSampleCsv') }}"
+                <a href="{{ route('students.exportSampleCsv') }}" onclick="return confirmExportCsv(this)"
                     class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 text-sm rounded-lg shadow transition flex items-center gap-2 w-full sm:w-auto justify-center">
                     <i class="bi bi-file-earmark-arrow-down"></i> Download Sample (CSV)
                 </a>
@@ -155,7 +154,7 @@
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="px-4 sm:px-6 py-3">{{ $s->nama ?? 'tidak-ada-nama' }}</td>
                                 <td class="px-4 sm:px-6 py-3">{{ $s->no_induk ?? 'tidak-ada-no-induk' }}</td>
-                                <td class="px-4 sm:px-6 py-3">Juz {{ $s->juz ?? $s->juzData ?? 'tidak-ada-juz' }}</td>
+                                <td class="px-4 sm:px-6 py-3">Juz {{ $s->juz ?? ($s->juzData ?? 'tidak-ada-juz') }}</td>
                                 <td class="px-4 sm:px-6 py-3">{{ $s->penyimak ?? 'tidak-ada-penyimak' }}</td>
                                 @if (Auth::check() && Auth::user()->role === 'teacher')
                                     <td class="px-4 sm:px-6 py-3 text-center">
@@ -165,6 +164,7 @@
                                                 <i class="bi bi-ticket-detailed"></i> Detail
                                             </a>
                                             <a href="{{ route('student.pdf', $s->id) }}"
+                                                onclick="return confirmDownloadPDF(this)"
                                                 class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs sm:text-sm shadow transition">
                                                 <i class="bi bi-file-earmark-pdf"></i> PDF
                                             </a>

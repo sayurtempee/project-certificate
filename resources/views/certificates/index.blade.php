@@ -60,8 +60,7 @@
 
                                     <!-- Juz -->
                                     <td class="px-4 py-3">
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 text-zs font-small">
+                                        <span class="inline-flex items-center px-2 py-0.5 text-zs font-small">
                                             Juz {{ $student->juz }}
                                         </span>
                                     </td>
@@ -69,7 +68,7 @@
                                     <!-- Tanggal Lulus -->
                                     <td class="px-4 py-3 space-y-2">
                                         <form action="{{ route('certificates.updateTanggalLulus', $student->id) }}"
-                                            method="POST"
+                                            method="POST" onsubmit="return confirmTanggalLulus(this)"
                                             class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                             @csrf
                                             <input type="date" name="tanggal_lulus"
@@ -91,7 +90,7 @@
                                     <!-- Tempat Kelulusan -->
                                     <td class="px-4 py-3">
                                         <form action="{{ route('certificates.updateTempatKelulusan', $student->id) }}"
-                                            method="POST"
+                                            method="POST" onsubmit="return confirmTempatKelulusan(this)"
                                             class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                             @csrf
                                             <input type="text" name="tempat_kelulusan"
@@ -113,7 +112,7 @@
                                     <!-- Nama Kepsek -->
                                     <td class="px-4 py-3">
                                         <form action="{{ route('certificates.updateNamaKepsek', $student->id) }}"
-                                            method="POST"
+                                            method="POST" onsubmit="return confirmNamaKepsek(this)"
                                             class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                             @csrf
                                             <input type="text" name="nm_kepsek" value="{{ $student->nm_kepsek ?? '' }}"
@@ -135,7 +134,7 @@
                                     <!-- NIP Kepsek -->
                                     <td class="px-4 py-3">
                                         <form action="{{ route('certificates.updateNipKepsek', $student->id) }}"
-                                            method="POST"
+                                            method="POST" onsubmit="return confirmNipKepsek(this)"
                                             class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                             @csrf
                                             <input type="text" name="nip_kepsek"
@@ -162,7 +161,7 @@
                                                 <i class="bi bi-eye flex-shrink-0 mr-1"></i>
                                                 <span class="leading-none">Lihat</span>
                                             </a>
-                                            <a href="{{ route('certificates.downloadCertificate', $student->id) }}"
+                                            <a href="{{ route('certificates.downloadCertificate', $student->id) }}" onclick="return confirmDownloadCertificate(this)"
                                                 class="inline-flex items-center justify-center w-28 h-10 bg-green-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-green-600 transition">
                                                 <i class="bi bi-cloud-arrow-down flex-shrink-0 mr-1"></i>
                                                 <span class="leading-none">Download</span>

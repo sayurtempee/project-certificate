@@ -123,7 +123,7 @@
                 <!-- Tombol Simpan -->
                 <div class="flex justify-end mt-6">
                     <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm sm:text-base font-semibold shadow transition">
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm sm:text-base font-semibold shadow transition" onclick="return confirmSimpanInline(this)">
                         💾 Simpan
                     </button>
                 </div>

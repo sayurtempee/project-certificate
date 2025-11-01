@@ -17,7 +17,7 @@
 
         <!-- Card Form -->
         <div class="bg-white rounded-xl shadow p-4 sm:p-6">
-            <form action="{{ route('student.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('student.store') }}" method="POST" class="space-y-4" onsubmit="return confirmMuridSatuan(this)">
                 @csrf
 
                 {{-- Nama Murid --}}

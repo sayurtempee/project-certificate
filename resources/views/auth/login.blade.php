@@ -6,10 +6,10 @@
         {{-- Bagian kiri: Form login --}}
         <div class="p-8 sm:p-10 flex flex-col justify-center">
             <div class="flex items-center space-x-4 mb-6">
-                <img src="{{ asset('img/logo.avif') }}" alt="Logo 1" class="h-12">
+                <img src="{{ asset('img/logo.avif') }}" alt="Logo 1" class="h-24">
             </div>
 
-            <h1 class="text-2xl font-bold mb-2">Selamat Datang 👋</h1>
+            <h1 class="text-2xl font-bold mb-2">Selamat Datang</h1>
             <p class="text-gray-600 mb-6">
                 Silakan login untuk mengakses
                 <span class="text-blue-600 font-semibold">Project Certificate Management</span>.
@@ -50,14 +50,15 @@
                 </button>
             </form>
 
-            <div class="mt-4 text-right">
-                <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">
-                    Lupa Password?
+            <div class="mt-4 text-right text-sm text-gray-500">
+                Lupa Password?
+                <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">
+                    click here
                 </a>
             </div>
 
             <p class="mt-6 text-xs text-gray-500 text-center">
-                © 2025 Project Certificate. All rights reserved.
+                © 2025 Project Certificate from <a href="https://github.com/sayurtempee/" target="_blank" class="italic font-semibold hover:text-black"><i class="bi bi-github"></i> Github.</a>
             </p>
         </div>
 

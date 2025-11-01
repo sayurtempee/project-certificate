@@ -54,7 +54,7 @@
                 <i class="bi bi-arrow-left mr-2"></i> Kembali
             </a>
 
-            <a href="{{ route('certificates.downloadCertificate', $student->id) }}"
+            <a href="{{ route('certificates.downloadCertificate', $student->id) }}" onclick="return confirmDownloadCertificate(this)"
                 class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">
                 <i class="bi bi-cloud-arrow-down mr-2"></i> Download PDF
             </a>

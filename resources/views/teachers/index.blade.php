@@ -155,7 +155,7 @@
 
                     <div>
                         <label class="block font-semibold">Nama</label>
-                        <input type="text" name="name" x-model="editData.name" class="w-full border rounded-lg p-2"
+                        <input type="text" name="name" x-model="editData.name" class="w-full border rounded-lg p-2 bg-gray-200 cursor-not-allowed"
                             readonly required>
                     </div>
 

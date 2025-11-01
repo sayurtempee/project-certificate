@@ -1,12 +1,11 @@
 @extends('layouts.app')
+@include('layouts.partials.swal')
 
 @section('title', 'Edit Profile Admin')
 
 @section('content')
     <div class="min-h-screen flex items-center justify-center bg-gray-100 py-10">
         <div class="w-full max-w-2xl bg-white shadow-lg rounded-xl p-8">
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">✏️ Edit Profile Admin</h1>
-
             {{-- Tombol Kembali --}}
             <div class="mb-5">
                 <a href="{{ route('dashboard') }}"
@@ -15,23 +14,7 @@
                 </a>
             </div>
 
-            {{-- Menampilkan error validasi --}}
-            @if ($errors->any())
-                <div class="bg-red-100 text-red-700 p-4 mb-4 rounded-lg">
-                    <ul class="list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>⚠️ {{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            {{-- Pesan sukses --}}
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-4 mb-4 rounded-lg text-sm">
-                    ✅ {{ session('success') }}
-                </div>
-            @endif
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Edit Profile Admin</h1>
 
             {{-- Form Update --}}
             <form action="{{ route('admin.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
@@ -39,13 +22,13 @@
                 @method('PUT')
 
                 {{-- Nama --}}
-                <div>
+                {{--  <div>
                     <label for="name" class="block font-medium mb-1">Nama
                         <span class="text-sm text-red-500 italic">(nama tidak bisa di ubah)</span>
                     </label>
                     <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}" disabled
                         class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 selection:text-red-500">
-                </div>
+                </div>  --}}
 
                 {{-- Email --}}
                 <div>
@@ -95,7 +78,7 @@
                                 class="w-20 h-20 rounded-full shadow">
                         </div>
                     @endif
-                    <p class="text-sm font-semibold text-black-500 text-center mt-2">{{ old('name', $admin->name) }}</p>
+                    <p class="text-center mt-5 text-lg font-semibold">{{ $admin->name }}</p>
                 </div>
 
                 {{-- Modal Cropper --}}
@@ -129,8 +112,9 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-                    💾 Simpan Perubahan
+                <button type="submit" id="saveButtonAdmin"
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                    Simpan Perubahan
                 </button>
             </form>
 

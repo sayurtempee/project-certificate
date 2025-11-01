@@ -65,6 +65,17 @@
 
             <main class="flex-1 p-6 overflow-y-auto">
                 @yield('dashboard-content')
+                <div class="h-12"></div>
+
+                <footer class="fixed bottom-0 left-0 w-full text-center text-gray-500 py-2">
+                    <div class="max-w-screen-sm mx-auto">
+                        Website certificate ini dibuat oleh
+                        <a href="https://github.com/sayurtempee/project-certificate" class="ml-1 hover:text-black inline-flex items-center">
+                            <i class="bi bi-github mr-1"></i> sayurtempee.
+                        </a>
+                        <div class="text-sm">Versi 1.0</div>
+                    </div>
+                </footer>
             </main>
         </div>
     </div>

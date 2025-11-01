@@ -49,7 +49,7 @@
             icon: 'success',
             title: 'Sukses',
             text: '{{ session('message') }}',
-            timer: 2500,
+            timer: 2000,
             showConfirmButton: false
         })
     @endif
@@ -164,9 +164,295 @@
                 form.submit(); // submit form jika dikonfirmasi
             }
         });
-
         return false;
     }
+
+    function confirmDownloadPDF(a) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Download',
+            text: "Yakin ingin mendownload pdf ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Download!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = a.href;
+            }
+        });
+        return false;
+    }
+
+    function confirmSimpanInline(button) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Merubah Murid',
+            text: "Yakin ingin merubah murid ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Update!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                button.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmExportCsv(a) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Download Sample CSV',
+            text: "Yakin ingin mendownload sample csv ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#FBC02D',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Download!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = a.href;
+            }
+        });
+        return false;
+    }
+
+    function confirmDeletePhotoTeacher(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Hapus Foto Profile',
+            text: "Yakin ingin menghapus foto profile ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Download!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmMuridSatuan(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Menambahkan Murid',
+            text: "Yakin ingin menambahkan murid ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Tambahkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmTanggalLulus(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Tanggal Kelulusan',
+            text: "Yakin ingin menerapkan tanggal ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Terapkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmTempatKelulusan(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Tempat Kelulusan',
+            text: "Yakin ingin menerapkan tempat kelulusan ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Terapkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmNamaKepsek(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Nama Kepala Sekolah',
+            text: "Yakin ingin menerapkan nama kepala sekolah ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Terapkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmNipKepsek(form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi NIP Kepala Sekolah',
+            text: "Yakin ingin menerapkan nip kepala sekolah ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Terapkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmDownloadCertificate(a) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Download Certificate',
+            text: "Yakin ingin mendownload certificate ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Download!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = a.href
+            }
+        });
+        return false;
+    }
+
+    {{--  Alert untuk update data guru  --}}
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButtonTeacher = document.getElementById('saveButtonTeacher');
+        if (!saveButtonTeacher) return;
+
+        saveButtonTeacher.addEventListener('click', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: "Apakah Anda yakin ingin menyimpan perubahan data guru ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveButtonTeacher.closest('form').submit();
+                }
+            });
+        });
+    });
+
+    {{--  Alert untuk update data admin  --}}
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButtonAdmin = document.getElementById('saveButtonAdmin');
+        if (!saveButtonAdmin) return;
+
+        saveButtonAdmin.addEventListener('click', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: "Apakah Anda yakin ingin menyimpan perubahan data admin ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (event.isConfirmed) {
+                    saveButtonAdmin.closest('form').submit();
+                }
+            });
+        });
+    });
+
+    {{--  CSV Alert  --}}
+    document.addEventListener('DOMContentLoaded', () => {
+        const csvInput = document.getElementById('csvFileInput');
+        const uploadLabel = document.getElementById('csvUploadLabel');
+        const csvForm = document.getElementById('csvForm');
+
+        // Ketika tombol upload diklik
+        uploadLabel.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Konfirmasi Upload Data Murid',
+                text: "Yakin ingin mengupload data murid?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Pilih File!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    csvInput.click();
+                }
+            });
+        });
+
+        // Setelah user memilih file
+        csvInput.addEventListener('change', function() {
+            if (!this.files.length) return;
+
+            Swal.fire({
+                title: 'Konfirmasi Kirim File',
+                text: `Upload file "${this.files[0].name}"?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Upload!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    csvForm.submit();
+                } else {
+                    this.value = '';
+                }
+            });
+        });
+    });
 
     // ====== GLOBAL CONFIRM HELPER ======
     // Pakai di tombol/anchor dengan attribute data-confirm, contoh:

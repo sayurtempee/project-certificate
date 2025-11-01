@@ -80,7 +80,7 @@ class TeacherController extends Controller
     {
         $validateData = $request->validate(
             [
-                'name' => 'required|string|max:255',
+                'name' => 'nullable|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $teacher->id,
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'password' => 'nullable|string|min:6|confirmed'
@@ -127,7 +127,7 @@ class TeacherController extends Controller
         }
 
 
-        $teacher->name = $validateData['name'];
+        // $teacher->name = $validateData['name'];
         $teacher->email = $validateData['email'];
 
         if (!empty($validateData['password'])) {
@@ -137,7 +137,7 @@ class TeacherController extends Controller
         $teacher->save();
 
         // return $this->redirectToRole('Guru berhasil diperbarui');
-        return redirect()->route('teacher.edit', $teacher->id)->with('success', 'Guru berhasil diperbarui');
+        return redirect()->route('teacher.edit', $teacher->id)->with('success', 'Data Guru berhasil diperbarui!');
     }
 
     /**

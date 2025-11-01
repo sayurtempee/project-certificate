@@ -1,12 +1,11 @@
 @extends('layouts.app')
+@include('layouts.partials.swal')
 
 @section('title', 'Edit Profile')
 
 @section('content')
     <div class="min-h-screen flex items-center justify-center bg-gray-100 py-10">
         <div class="w-full max-w-2xl bg-white shadow-lg rounded-xl p-8">
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">✏️ Edit Profile</h1>
-
             {{-- Tombol Kembali --}}
             <div class="mb-5">
                 <a href="{{ route('dashboard') }}"
@@ -15,36 +14,20 @@
                 </a>
             </div>
 
-            {{-- Menampilkan error validasi --}}
-            @if ($errors->any())
-                <div class="bg-red-100 text-red-700 p-4 mb-4 rounded-lg">
-                    <ul class="list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>⚠️ {{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            {{-- Pesan sukses --}}
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-4 mb-4 rounded-lg text-sm">
-                    ✅ {{ session('success') }}
-                </div>
-            @endif
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Edit Profile Guru</h1>
 
             {{-- Form Update --}}
             <form action="{{ route('teacher.update', $teacher->id) }}" method="POST" enctype="multipart/form-data"
-                class="space-y-5">
+                class="space-y-6">
                 @csrf
                 @method('PUT')
 
                 {{-- Nama --}}
-                <div>
-                    <label for="name" class="block font-medium mb-1">Nama</label>
+                {{--  <div>
+                    <label for="name" class="block font-medium mb-1">Nama <span class="text-sm text-red-500">(nama ini tidak bisa di ubah!!!)</span></label>
                     <input type="text" name="name" id="name" value="{{ old('name', $teacher->name) }}"
-                        class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
-                </div>
+                        class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-800 cursor-not-allowed" disabled>
+                </div>  --}}
 
                 {{-- Email --}}
                 <div>
@@ -55,8 +38,10 @@
 
                 {{-- Foto --}}
                 <div>
-                    <label for="photo" class="block font-medium mb-1">Foto Profile</label>
-                    <input type="file" name="photo" id="photo" class="w-full text-sm">
+                    <label for="photo" class="block font-medium mb-1">Foto Profile <span
+                            class="text-sm text-red-500 font-semibold">(upload foto click di bawah ini!!!)</span></label>
+                    <input type="file" name="photo" id="photo"
+                        class="w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
 
                     {{-- Hidden input untuk hasil crop --}}
                     <input type="hidden" name="cropped_image" id="cropped_image">
@@ -72,6 +57,7 @@
                                 class="w-20 h-20 rounded-full shadow">
                         </div>
                     @endif
+                    <p class="text-center mt-5 text-lg font-semibold">{{ $teacher->name }}</p>
                 </div>
 
                 {{-- Modal Cropper --}}
@@ -105,15 +91,16 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-                    💾 Simpan Perubahan
+                <button type="submit" id="saveButtonTeacher"
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                    Simpan Perubahan
                 </button>
             </form>
 
             {{-- Form hapus foto --}}
             @if ($teacher->photo)
                 <form action="{{ route('teacher.deletePhoto', $teacher->id) }}" method="POST"
-                    onsubmit="return confirm('Yakin ingin hapus foto profil?')" class="mt-4">
+                    onsubmit="return confirmDeletePhotoTeacher(this)" class="mt-4">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
@@ -124,7 +111,7 @@
             @endif
 
             {{-- Form hapus profile --}}
-            <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
+            {{--  <form action="{{ route('teacher.destroy', $teacher->id) }}" method="POST"
                 onsubmit="return confirm('Yakin ingin menghapus profile ini? Data tidak bisa dikembalikan!')"
                 class="mt-3">
                 @csrf
@@ -133,7 +120,7 @@
                     class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                     ❌ Hapus Profile
                 </button>
-            </form>
+            </form>  --}}
         </div>
     </div>
 @endsection
